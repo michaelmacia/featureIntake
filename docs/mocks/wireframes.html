@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Feature Intake — Mockups</title>
+<style>
+  :root { --ink:#1b1f24; --muted:#5d6673; --line:#d9dee5; --bg:#eef1f5; --card:#fff; --accent:#2458d6; --soft:#e7eefc; --ok:#1a7f4b; --warn:#b54708; --warn-bg:#fef0e1; --p1:#b42318; --p1-bg:#fdecea; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 14px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: var(--ink); background: var(--bg); padding: 2rem clamp(1rem, 4vw, 3rem) 4rem; }
+  header.doc { max-width: 1100px; margin: 0 auto 2rem; }
+  header.doc h1 { margin: 0 0 .25rem; font-size: 1.8rem; }
+  header.doc p { color: var(--muted); margin: 0; max-width: 70ch; }
+  nav.toc { max-width: 1100px; margin: 0 auto 2rem; display: flex; flex-wrap: wrap; gap: .5rem; }
+  nav.toc a { background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: .3rem .8rem; color: var(--ink); text-decoration: none; font-size: .85rem; }
+  section.mock { max-width: 1100px; margin: 0 auto 3rem; }
+  section.mock > h2 { font-size: 1.15rem; margin: 0 0 .25rem; }
+  section.mock > p.note { color: var(--muted); margin: 0 0 1rem; max-width: 75ch; }
+  .tag { display: inline-block; font-size: .7rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; padding: .1rem .5rem; border-radius: 4px; background: #ede9fe; color: #5b21b6; vertical-align: middle; margin-left: .4rem; }
+  .tag.mvp { background: #dcfce7; color: #166534; }
+  .frame { background: var(--card); border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 8px 30px rgb(16 24 40 / 8%); overflow: hidden; }
+  .browserbar { display: flex; align-items: center; gap: .4rem; padding: .5rem .8rem; background: #f6f7f9; border-bottom: 1px solid var(--line); }
+  .browserbar i { width: 10px; height: 10px; border-radius: 50%; background: #d0d5dd; display: inline-block; }
+  .browserbar span { margin-left: .8rem; flex: 1; background: #fff; border: 1px solid var(--line); border-radius: 6px; padding: .15rem .6rem; color: var(--muted); font-size: .8rem; }
+  .appbar { display: flex; justify-content: space-between; align-items: center; padding: .6rem 1.2rem; border-bottom: 1px solid var(--line); }
+  .brand { display: flex; align-items: center; gap: .5rem; font-weight: 650; }
+  .brand b { width: 18px; height: 18px; border-radius: 5px; background: linear-gradient(135deg, var(--accent), #7a5af8); display: inline-block; }
+  .avatar { display: flex; align-items: center; gap: .5rem; font-size: .85rem; color: var(--muted); }
+  .avatar b { width: 28px; height: 28px; border-radius: 50%; background: var(--soft); color: var(--accent); display: grid; place-items: center; font-size: .75rem; }
+  .pad { padding: 1.5rem; }
+  .row { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .grow { flex: 1 1 280px; min-width: 0; }
+  .field { margin-bottom: .9rem; }
+  .field label { display: block; font-weight: 550; margin-bottom: .3rem; }
+  .input { border: 1px solid var(--line); border-radius: 8px; padding: .5rem .7rem; background: #fff; min-height: 2.2rem; }
+  .input.locked { background: #f6f7f9; color: var(--muted); display: flex; justify-content: space-between; }
+  .btn { display: inline-block; background: var(--accent); color: #fff; font-weight: 600; padding: .5rem 1rem; border-radius: 8px; }
+  .btn.ghost { background: #fff; color: var(--ink); border: 1px solid var(--line); }
+  .muted { color: var(--muted); }
+  .small { font-size: .82rem; }
+  table { width: 100%; border-collapse: collapse; }
+  th { text-align: left; font-size: .75rem; color: var(--muted); padding: .5rem .8rem; background: #f6f7f9; border-bottom: 1px solid var(--line); }
+  td { padding: .7rem .8rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .status { font-size: .75rem; font-weight: 600; padding: .1rem .5rem; border-radius: 999px; background: var(--soft); color: var(--accent); white-space: nowrap; }
+  .status.warn { background: var(--warn-bg); color: var(--warn); }
+  .status.ok { background: #dcfce7; color: var(--ok); }
+  .band { font-size: .72rem; font-weight: 700; padding: .05rem .4rem; border-radius: 5px; background: var(--p1-bg); color: var(--p1); }
+  .callout { border: 1px solid var(--warn); background: var(--warn-bg); border-radius: 10px; padding: 1rem; margin-top: 1rem; }
+  .email { max-width: 620px; margin: 0 auto; }
+  .email .meta { font-size: .8rem; color: var(--muted); padding: .8rem 1.2rem; border-bottom: 1px solid var(--line); background: #f6f7f9; }
+  .email .meta div { margin: .1rem 0; }
+  .email .body { padding: 1.5rem 1.8rem 2rem; }
+  .email h3 { margin: 0 0 .8rem; font-size: 1.2rem; }
+  .kv { display: grid; grid-template-columns: 6.5rem 1fr; gap: .3rem 1rem; background: #f6f7f9; border-radius: 8px; padding: .8rem 1rem; margin: 1rem 0; font-size: .9rem; }
+  .kv dt { color: var(--muted); }
+  .kv dd { margin: 0; }
+  .grid3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.25rem; }
+  .teams { max-width: 520px; border-left: 4px solid var(--p1); }
+  .jira { display: grid; grid-template-columns: 1fr 260px; }
+  .jira aside { background: #f6f7f9; border-left: 1px solid var(--line); padding: 1.2rem; font-size: .85rem; }
+  .jira aside dt { color: var(--muted); font-size: .75rem; margin-top: .6rem; }
+  .jira aside dd { margin: 0; }
+  @media (max-width: 720px) { .jira { grid-template-columns: 1fr; } .jira aside { border-left: 0; border-top: 1px solid var(--line); } }
+  .shots { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; }
+  .shots figure { margin: 0; }
+  .shots img { width: 100%; border: 1px solid var(--line); border-radius: 8px; display: block; }
+  .shots figure.phone img { max-width: 180px; }
+  .shots figcaption { font-size: .8rem; color: var(--muted); margin-top: .3rem; }
+  .flow { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; font-size: .85rem; }
+  .flow span { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: .3rem .6rem; }
+</style>
+</head>
+<body>
+<header class="doc">
+  <h1>Feature Intake — Mockups</h1>
+  <p>The MVP screens are real screenshots of the running app. Phase 2 mockups show the notification, SSO and integration experiences described in the PRD (FR-14 to FR-18) and the Jira stories in epic E5. Content uses the seed test data.</p>
+</header>
+
+<nav class="toc">
+  <a href="#mvp">MVP screenshots</a>
+  <a href="#sso">SSO-prefilled form</a>
+  <a href="#my">My requests</a>
+  <a href="#emails">Emails</a>
+  <a href="#teams">Teams P1 alert</a>
+  <a href="#jira">Auto-created Jira epic</a>
+</nav>
+
+<section class="mock" id="mvp">
+  <h2>MVP screens <span class="tag mvp">Built</span></h2>
+  <p class="note">Captured from <code>npm start</code> after <code>npm run seed</code>. Regenerate with headless Edge or Chrome (see README).</p>
+  <div class="shots">
+    <figure><img src="screenshots/intake-step1.png" alt="Intake form step 1"><figcaption>Intake wizard, step 1 of 4</figcaption></figure>
+    <figure><img src="screenshots/triage-board.png" alt="Triage board"><figcaption>Triage board with KPIs and filters</figcaption></figure>
+    <figure><img src="screenshots/request-detail.png" alt="Request detail dialog"><figcaption>Request detail, workflow and activity</figcaption></figure>
+    <figure class="phone"><img src="screenshots/mobile-intake.png" alt="Mobile intake"><figcaption>Intake at phone width</figcaption></figure>
+  </div>
+</section>
+
+<section class="mock" id="sso">
+  <h2>Step 1 with SSO <span class="tag">Phase 2</span></h2>
+  <p class="note">After OIDC sign-in, name, email and department come from the identity token and are locked. The requester goes straight to step 2 unless their department is missing.</p>
+  <div class="frame">
+    <div class="browserbar"><i></i><i></i><i></i><span>intake.example.com</span></div>
+    <div class="appbar"><div class="brand"><b></b>Feature Intake</div><div class="avatar">My requests · Submit request <b>PR</b></div></div>
+    <div class="pad">
+      <h3 style="margin-top:0">About you</h3>
+      <div class="row">
+        <div class="grow field"><label>Your name</label><div class="input locked">Priya Raman <span class="small">🔒 from your company account</span></div></div>
+        <div class="grow field"><label>Work email</label><div class="input locked">priya.raman@example.com <span class="small">🔒</span></div></div>
+      </div>
+      <div class="field"><label>Department</label><div class="input locked">Finance <span class="small">🔒 from Workday</span></div></div>
+      <p class="small muted">Not right? Update your profile in Workday. Changes appear here the next time you sign in.</p>
+      <div style="text-align:right"><span class="btn">Continue</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="mock" id="my">
+  <h2>My requests <span class="tag">Phase 2</span></h2>
+  <p class="note">Requesters see only their own requests. When a request is in Needs Info, the triage question is shown inline, and replying moves the request back to In Review (story "My requests page for requesters").</p>
+  <div class="frame">
+    <div class="browserbar"><i></i><i></i><i></i><span>intake.example.com/mine</span></div>
+    <div class="appbar"><div class="brand"><b></b>Feature Intake</div><div class="avatar">My requests · Submit request <b>PR</b></div></div>
+    <div class="pad">
+      <h3 style="margin:0 0 1rem">My requests</h3>
+      <table>
+        <thead><tr><th>Reference</th><th>Request</th><th>Status</th><th>Last update</th></tr></thead>
+        <tbody>
+          <tr><td>FR-2026-0041</td><td><strong>Auto-sync closed-won deals to invoicing</strong><br><span class="small muted">Submitted Sep 23</span></td><td><span class="status warn">Needs Info</span></td><td class="small">Today · Jordan Kim</td></tr>
+          <tr><td>FR-2026-0027</td><td><strong>Quarterly SOX access review report</strong><br><span class="small muted">Submitted Aug 12</span></td><td><span class="status ok">Approved</span></td><td class="small">Aug 19 · FEAT-126</td></tr>
+          <tr><td>FR-2026-0010</td><td><strong>Marketing campaign ROI report</strong><br><span class="small muted">Submitted Jun 26</span></td><td><span class="status">In Delivery</span></td><td class="small">Jul 30 · FEAT-109</td></tr>
+        </tbody>
+      </table>
+      <div class="callout">
+        <strong>Jordan Kim asked about FR-2026-0041:</strong>
+        <p style="margin:.3rem 0 .8rem">Roughly how many invoices per month are re-keyed, and which SAP company codes are involved?</p>
+        <div class="input" style="min-height:4rem;color:var(--muted)">Type your answer…</div>
+        <div style="margin-top:.6rem"><span class="btn">Send answer</span> <span class="small muted">&nbsp;Sends the request back to review</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="mock" id="emails">
+  <h2>Email notifications <span class="tag">Phase 2</span></h2>
+  <p class="note">Sent by the outbox worker (ADR-006). Plain, text-first layout that works in Outlook. Every email has the reference, the current status and one clear link.</p>
+  <div class="grid3">
+    <div class="frame email">
+      <div class="meta"><div><b>From:</b> Feature Intake &lt;no-reply@example.com&gt;</div><div><b>Subject:</b> We got your request — FR-2026-0041</div></div>
+      <div class="body">
+        <h3>Thanks, Priya. Your request is in.</h3>
+        <p>Product triage reviews every request within <b>5 business days</b>.</p>
+        <dl class="kv"><dt>Reference</dt><dd>FR-2026-0041</dd><dt>Title</dt><dd>Auto-sync closed-won deals to invoicing</dd><dt>Initial priority</dt><dd><span class="band">P2</span> 55/100</dd></dl>
+        <span class="btn">View your request</span>
+      </div>
+    </div>
+    <div class="frame email">
+      <div class="meta"><div><b>From:</b> Feature Intake</div><div><b>Subject:</b> Question about FR-2026-0041</div></div>
+      <div class="body">
+        <h3>We need a bit more information</h3>
+        <p><b>Jordan Kim</b> asked:</p>
+        <blockquote style="margin:0;border-left:3px solid var(--warn);padding:.2rem .8rem;color:var(--ink)">Roughly how many invoices per month are re-keyed, and which SAP company codes are involved?</blockquote>
+        <p class="small muted">If we don't hear back within 10 business days we'll close the request. You can reopen it any time.</p>
+        <span class="btn">Answer the question</span>
+      </div>
+    </div>
+    <div class="frame email">
+      <div class="meta"><div><b>From:</b> Feature Intake</div><div><b>Subject:</b> Approved — FR-2026-0041 is now FEAT-141</div></div>
+      <div class="body">
+        <h3>Good news: your request was approved</h3>
+        <p>It's now in the delivery backlog as <b>FEAT-141</b>. The delivery team will size it in the next sprint.</p>
+        <dl class="kv"><dt>Owner</dt><dd>Jordan Kim (PM)</dd><dt>Jira</dt><dd>FEAT-141</dd></dl>
+        <span class="btn">Follow in Jira</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="mock" id="teams">
+  <h2>Teams / Slack alert for new P1 <span class="tag">Phase 2</span></h2>
+  <p class="note">Posted to the triage channel when a new submission scores P1, so urgent items are seen the same day.</p>
+  <div class="frame teams pad">
+    <div class="small muted">Feature Intake · App · 10:42</div>
+    <p style="margin:.4rem 0"><span class="band">P1 · 89</span> <b>New request: GDPR data-subject request workflow</b></p>
+    <p class="small" style="margin:0 0 .6rem">Grace Liu · Legal &amp; Compliance · Critical · needed by Oct 30 · regulatory</p>
+    <p class="small muted" style="margin:0 0 .8rem">"Data-subject access and deletion requests arrive by email and are tracked in a spreadsheet. We have 30 days to respond and missed two deadlines last year."</p>
+    <span class="btn">Open in triage board</span> <span class="btn ghost">Assign to me</span>
+  </div>
+</section>
+
+<section class="mock" id="jira">
+  <h2>Auto-created Jira epic <span class="tag">Phase 2</span></h2>
+  <p class="note">Created when a request moves to Approved. The request content is mapped into the description, and labels link it back to the intake record.</p>
+  <div class="flow" style="margin-bottom:1rem"><span>Triage sets <b>Approved</b></span>→<span>outbox event <code>jira.create</code></span>→<span>Jira REST <code>POST /rest/api/3/issue</code></span>→<span>jiraKey saved on FR</span>→<span>requester emailed</span></div>
+  <div class="frame jira">
+    <div class="pad">
+      <div class="small muted">FEAT / FEAT-141</div>
+      <h3 style="margin:.2rem 0 1rem;font-size:1.3rem">Auto-sync closed-won deals to invoicing</h3>
+      <h4 style="margin:.8rem 0 .2rem">Problem</h4>
+      <p style="margin:0">Finance re-keys every closed deal from Salesforce into SAP by hand, which takes days and introduces errors.</p>
+      <h4 style="margin:.8rem 0 .2rem">Business value</h4>
+      <p style="margin:0">Saves about 120 hours per month and speeds up cash collection.</p>
+      <h4 style="margin:.8rem 0 .2rem">Source</h4>
+      <p style="margin:0">Feature Intake <a href="#">FR-2026-0041</a> · requested by Priya Raman (Finance) · score 55 / P2</p>
+    </div>
+    <aside>
+      <dl>
+        <dt>Issue type</dt><dd>Epic</dd>
+        <dt>Status</dt><dd>To Do</dd>
+        <dt>Priority</dt><dd>High (from P2)</dd>
+        <dt>Labels</dt><dd>feature-intake, finance, integration</dd>
+        <dt>Components</dt><dd>Salesforce, SAP</dd>
+        <dt>Due date</dt><dd>—</dd>
+        <dt>Reporter</dt><dd>Feature Intake (bot)</dd>
+      </dl>
+    </aside>
+  </div>
+</section>
+</body>
+</html>

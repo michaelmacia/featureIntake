@@ -1,0 +1,29 @@
+sequenceDiagram
+  autonumber
+  actor U as Business user
+  participant W as Intake wizard (browser)
+  participant R as rules.js (browser)
+  participant A as API (server)
+  participant RS as rules.js (server)
+  participant S as Store
+  U->>W: Fill step, click Continue
+  W->>R: validateRequest(form)
+  R-->>W: errors for this step
+  alt has errors
+    W-->>U: Error summary + inline messages
+  else valid
+    W-->>U: Next step (draft autosaved to localStorage)
+  end
+  U->>W: Submit on Review step
+  W->>A: POST /api/requests (JSON)
+  A->>RS: validateRequest(body, today)
+  alt invalid
+    A-->>W: 422 {fields}
+    W-->>U: Show server errors
+  else valid
+    A->>RS: computePriority(value)
+    A->>S: insert(record with id, status=Submitted, score, history)
+    S-->>A: persisted
+    A-->>W: 201 + Location
+    W-->>U: Confirmation with FR-YYYY-NNNN and band
+  end

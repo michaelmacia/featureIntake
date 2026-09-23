@@ -1,0 +1,83 @@
+erDiagram
+  APP_USER ||--o{ FEATURE_REQUEST : submits
+  APP_USER ||--o{ FEATURE_REQUEST : "is assigned"
+  FEATURE_REQUEST ||--|{ REQUEST_SYSTEM : touches
+  SYSTEM ||--o{ REQUEST_SYSTEM : "is touched by"
+  FEATURE_REQUEST ||--o{ REQUEST_EVENT : "has history"
+  FEATURE_REQUEST ||--o{ COMMENT : has
+  FEATURE_REQUEST ||--o{ ATTACHMENT : has
+  FEATURE_REQUEST ||--o{ OUTBOX_EVENT : emits
+  APP_USER ||--o{ COMMENT : writes
+
+  APP_USER {
+    uuid id PK
+    text email UK
+    text display_name
+    text department
+    text idp_subject UK
+    bool is_triage
+  }
+  FEATURE_REQUEST {
+    text id PK "FR-2026-0042"
+    uuid requester_id FK
+    uuid assignee_id FK
+    text title
+    text category
+    text problem
+    text proposed_solution
+    text business_value
+    text success_metrics
+    text users_affected
+    text revenue_impact
+    bool regulatory
+    text urgency
+    date target_date
+    text urgency_reason
+    text status
+    smallint priority_score
+    char priority_band
+    text jira_key
+    timestamptz created_at
+    timestamptz updated_at
+  }
+  SYSTEM {
+    smallint id PK
+    text name UK
+  }
+  REQUEST_SYSTEM {
+    text request_id FK
+    smallint system_id FK
+  }
+  REQUEST_EVENT {
+    bigint id PK
+    text request_id FK
+    uuid actor_id FK
+    text type
+    text from_value
+    text to_value
+    timestamptz at
+  }
+  COMMENT {
+    bigint id PK
+    text request_id FK
+    uuid author_id FK
+    text body
+    timestamptz at
+  }
+  ATTACHMENT {
+    uuid id PK
+    text request_id FK
+    text file_name
+    text content_type
+    int size_bytes
+    text storage_key
+  }
+  OUTBOX_EVENT {
+    bigint id PK
+    text request_id FK
+    text kind "jira.create | email.status | teams.p1"
+    jsonb payload
+    int attempts
+    timestamptz next_attempt_at
+    timestamptz processed_at
+  }

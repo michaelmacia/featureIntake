@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Triage Board · Feature Intake</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/"><span class="brand-mark" aria-hidden="true"></span>Feature Intake</a>
+    <nav aria-label="Main">
+      <a href="/">Submit request</a>
+      <a href="/requests" aria-current="page">Triage board</a>
+    </nav>
+  </header>
+
+  <main class="page">
+    <div class="page-head">
+      <div>
+        <h1>Triage board</h1>
+        <p class="lede">Review, prioritise and route incoming requests.</p>
+      </div>
+      <div class="actor">
+        <label for="actor">Acting as</label>
+        <input id="actor" placeholder="Your name" maxlength="80">
+      </div>
+    </div>
+
+    <section class="kpis" id="kpis" aria-label="Summary"></section>
+
+    <section class="toolbar" aria-label="Filters">
+      <input type="search" id="q" placeholder="Search title, ID, requester, Jira key…" aria-label="Search">
+      <select id="f-status" aria-label="Status"></select>
+      <select id="f-department" aria-label="Department"></select>
+      <select id="f-priority" aria-label="Priority">
+        <option value="">All priorities</option><option>P1</option><option>P2</option><option>P3</option><option>P4</option>
+      </select>
+      <a class="btn ghost" id="export" href="/api/requests/export.csv">Export CSV</a>
+    </section>
+
+    <div class="table-wrap">
+      <table class="grid" id="table">
+        <thead>
+          <tr>
+            <th scope="col"><button class="sort" data-sort="createdAt">ID / Submitted</button></th>
+            <th scope="col"><button class="sort" data-sort="title">Request</button></th>
+            <th scope="col"><button class="sort" data-sort="priorityScore">Priority</button></th>
+            <th scope="col"><button class="sort" data-sort="status">Status</button></th>
+            <th scope="col"><button class="sort" data-sort="targetDate">Needed by</button></th>
+            <th scope="col">Assignee</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+      <p class="empty" id="empty" hidden>No requests match these filters.</p>
+    </div>
+  </main>
+
+  <dialog id="detail" aria-labelledby="d-title">
+    <div class="dialog-head">
+      <div>
+        <p class="muted" id="d-id"></p>
+        <h2 id="d-title"></h2>
+      </div>
+      <button class="icon-btn" id="d-close" aria-label="Close">✕</button>
+    </div>
+    <div class="dialog-body">
+      <div class="detail-main" id="d-main"></div>
+      <aside class="detail-side">
+        <form id="triage" novalidate>
+          <div class="field">
+            <label for="t-status">Status</label>
+            <select id="t-status"></select>
+          </div>
+          <div class="field">
+            <label for="t-assignee">Assignee</label>
+            <input id="t-assignee" maxlength="80">
+          </div>
+          <div class="field">
+            <label for="t-jira">Jira key</label>
+            <input id="t-jira" placeholder="FEAT-123" maxlength="20">
+          </div>
+          <div class="field">
+            <label for="t-note">Note <span class="optional" id="t-note-opt">Optional</span></label>
+            <textarea id="t-note" rows="3" maxlength="2000"></textarea>
+          </div>
+          <p class="error" id="t-error" role="alert" hidden></p>
+          <button class="btn primary block" type="submit">Save changes</button>
+        </form>
+        <h3>Activity</h3>
+        <ol class="timeline" id="d-timeline"></ol>
+      </aside>
+    </div>
+  </dialog>
+
+  <script src="/js/rules.js"></script>
+  <script src="/js/common.js"></script>
+  <script src="/js/board.js"></script>
+</body>
+</html>

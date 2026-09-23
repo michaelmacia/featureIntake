@@ -1,0 +1,27 @@
+flowchart TB
+  subgraph Browser
+    FORM[index.html + intake.js<br/>multi-step wizard, drafts]
+    BOARD[requests.html + board.js<br/>filters, KPIs, detail dialog]
+    RULES_C[rules.js<br/>shared validation · scoring · workflow]
+    FORM --> RULES_C
+    BOARD --> RULES_C
+  end
+
+  subgraph Node["Node.js process (server/)"]
+    HTTP[app.js<br/>router · JSON parsing · security headers]
+    STATIC[static file handler<br/>path-traversal guard]
+    API[API handlers<br/>requests · stats · meta · export]
+    RULES_S[rules.js<br/>same module, required on server]
+    STORE[store.js<br/>repository · atomic writes · ID sequence]
+    HTTP --> STATIC
+    HTTP --> API
+    API --> RULES_S
+    API --> STORE
+  end
+
+  FILE[(data/requests.json)]
+
+  FORM -- "fetch /api/*" --> HTTP
+  BOARD -- "fetch /api/*" --> HTTP
+  Browser -- "GET /, /requests, /js, /css" --> STATIC
+  STORE -- "write tmp + rename" --> FILE

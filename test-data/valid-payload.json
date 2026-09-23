@@ -1,0 +1,21 @@
+{
+  "requesterName": "Priya Raman",
+  "requesterEmail": "priya.raman@example.com",
+  "department": "Finance",
+  "title": "Auto-sync closed-won deals to invoicing",
+  "category": "Integration",
+  "problem": "Finance re-keys every closed deal from Salesforce into SAP by hand, which takes days and introduces errors.",
+  "proposedSolution": "",
+  "businessValue": "Saves about 120 hours per month and speeds up cash collection.",
+  "successMetrics": "",
+  "affectedSystems": [
+    "Salesforce",
+    "SAP"
+  ],
+  "usersAffected": "11-50",
+  "revenueImpact": "Medium ($50K-$250K)",
+  "regulatory": false,
+  "urgency": "High",
+  "targetDate": "",
+  "urgencyReason": ""
+}

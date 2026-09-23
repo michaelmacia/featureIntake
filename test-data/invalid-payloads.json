@@ -1,0 +1,394 @@
+[
+  {
+    "case": "Empty object",
+    "payload": {},
+    "expectFields": [
+      "requesterName",
+      "requesterEmail",
+      "department",
+      "title",
+      "category",
+      "problem",
+      "businessValue",
+      "affectedSystems",
+      "usersAffected",
+      "revenueImpact",
+      "urgency"
+    ]
+  },
+  {
+    "case": "Bad email",
+    "payload": {
+      "requesterName": "Priya Raman",
+      "requesterEmail": "priya@",
+      "department": "Finance",
+      "title": "Auto-sync closed-won deals to invoicing",
+      "category": "Integration",
+      "problem": "Finance re-keys every closed deal from Salesforce into SAP by hand, which takes days and introduces errors.",
+      "proposedSolution": "",
+      "businessValue": "Saves about 120 hours per month and speeds up cash collection.",
+      "successMetrics": "",
+      "affectedSystems": [
+        "Salesforce",
+        "SAP"
+      ],
+      "usersAffected": "11-50",
+      "revenueImpact": "Medium ($50K-$250K)",
+      "regulatory": false,
+      "urgency": "High",
+      "targetDate": "",
+      "urgencyReason": ""
+    },
+    "expectFields": [
+      "requesterEmail"
+    ]
+  },
+  {
+    "case": "Title too short",
+    "payload": {
+      "requesterName": "Priya Raman",
+      "requesterEmail": "priya.raman@example.com",
+      "department": "Finance",
+      "title": "Hi",
+      "category": "Integration",
+      "problem": "Finance re-keys every closed deal from Salesforce into SAP by hand, which takes days and introduces errors.",
+      "proposedSolution": "",
+      "businessValue": "Saves about 120 hours per month and speeds up cash collection.",
+      "successMetrics": "",
+      "affectedSystems": [
+        "Salesforce",
+        "SAP"
+      ],
+      "usersAffected": "11-50",
+      "revenueImpact": "Medium ($50K-$250K)",
+      "regulatory": false,
+      "urgency": "High",
+      "targetDate": "",
+      "urgencyReason": ""
+    },
+    "expectFields": [
+      "title"
+    ]
+  },
+  {
+    "case": "Title too long (121)",
+    "payload": {
+      "requesterName": "Priya Raman",
+      "requesterEmail": "priya.raman@example.com",
+      "department": "Finance",
+      "title": "TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT",
+      "category": "Integration",
+      "problem": "Finance re-keys every closed deal from Salesforce into SAP by hand, which takes days and introduces errors.",
+      "proposedSolution": "",
+      "businessValue": "Saves about 120 hours per month and speeds up cash collection.",
+      "successMetrics": "",
+      "affectedSystems": [
+        "Salesforce",
+        "SAP"
+      ],
+      "usersAffected": "11-50",
+      "revenueImpact": "Medium ($50K-$250K)",
+      "regulatory": false,
+      "urgency": "High",
+      "targetDate": "",
+      "urgencyReason": ""
+    },
+    "expectFields": [
+      "title"
+    ]
+  },
+  {
+    "case": "Problem too short",
+    "payload": {
+      "requesterName": "Priya Raman",
+      "requesterEmail": "priya.raman@example.com",
+      "department": "Finance",
+      "title": "Auto-sync closed-won deals to invoicing",
+      "category": "Integration",
+      "problem": "Too short",
+      "proposedSolution": "",
+      "businessValue": "Saves about 120 hours per month and speeds up cash collection.",
+      "successMetrics": "",
+      "affectedSystems": [
+        "Salesforce",
+        "SAP"
+      ],
+      "usersAffected": "11-50",
+      "revenueImpact": "Medium ($50K-$250K)",
+      "regulatory": false,
+      "urgency": "High",
+      "targetDate": "",
+      "urgencyReason": ""
+    },
+    "expectFields": [
+      "problem"
+    ]
+  },
+  {
+    "case": "Unknown department",
+    "payload": {
+      "requesterName": "Priya Raman",
+      "requesterEmail": "priya.raman@example.com",
+      "department": "Space Program",
+      "title": "Auto-sync closed-won deals to invoicing",
+      "category": "Integration",
+      "problem": "Finance re-keys every closed deal from Salesforce into SAP by hand, which takes days and introduces errors.",
+      "proposedSolution": "",
+      "businessValue": "Saves about 120 hours per month and speeds up cash collection.",
+      "successMetrics": "",
+      "affectedSystems": [
+        "Salesforce",
+        "SAP"
+      ],
+      "usersAffected": "11-50",
+      "revenueImpact": "Medium ($50K-$250K)",
+      "regulatory": false,
+      "urgency": "High",
+      "targetDate": "",
+      "urgencyReason": ""
+    },
+    "expectFields": [
+      "department"
+    ]
+  },
+  {
+    "case": "No systems",
+    "payload": {
+      "requesterName": "Priya Raman",
+      "requesterEmail": "priya.raman@example.com",
+      "department": "Finance",
+      "title": "Auto-sync closed-won deals to invoicing",
+      "category": "Integration",
+      "problem": "Finance re-keys every closed deal from Salesforce into SAP by hand, which takes days and introduces errors.",
+      "proposedSolution": "",
+      "businessValue": "Saves about 120 hours per month and speeds up cash collection.",
+      "successMetrics": "",
+      "affectedSystems": [],
+      "usersAffected": "11-50",
+      "revenueImpact": "Medium ($50K-$250K)",
+      "regulatory": false,
+      "urgency": "High",
+      "targetDate": "",
+      "urgencyReason": ""
+    },
+    "expectFields": [
+      "affectedSystems"
+    ]
+  },
+  {
+    "case": "Systems not an array",
+    "payload": {
+      "requesterName": "Priya Raman",
+      "requesterEmail": "priya.raman@example.com",
+      "department": "Finance",
+      "title": "Auto-sync closed-won deals to invoicing",
+      "category": "Integration",
+      "problem": "Finance re-keys every closed deal from Salesforce into SAP by hand, which takes days and introduces errors.",
+      "proposedSolution": "",
+      "businessValue": "Saves about 120 hours per month and speeds up cash collection.",
+      "successMetrics": "",
+      "affectedSystems": "SAP",
+      "usersAffected": "11-50",
+      "revenueImpact": "Medium ($50K-$250K)",
+      "regulatory": false,
+      "urgency": "High",
+      "targetDate": "",
+      "urgencyReason": ""
+    },
+    "expectFields": [
+      "affectedSystems"
+    ]
+  },
+  {
+    "case": "Unknown system",
+    "payload": {
+      "requesterName": "Priya Raman",
+      "requesterEmail": "priya.raman@example.com",
+      "department": "Finance",
+      "title": "Auto-sync closed-won deals to invoicing",
+      "category": "Integration",
+      "problem": "Finance re-keys every closed deal from Salesforce into SAP by hand, which takes days and introduces errors.",
+      "proposedSolution": "",
+      "businessValue": "Saves about 120 hours per month and speeds up cash collection.",
+      "successMetrics": "",
+      "affectedSystems": [
+        "SAP",
+        "Mainframe"
+      ],
+      "usersAffected": "11-50",
+      "revenueImpact": "Medium ($50K-$250K)",
+      "regulatory": false,
+      "urgency": "High",
+      "targetDate": "",
+      "urgencyReason": ""
+    },
+    "expectFields": [
+      "affectedSystems"
+    ]
+  },
+  {
+    "case": "Past target date",
+    "payload": {
+      "requesterName": "Priya Raman",
+      "requesterEmail": "priya.raman@example.com",
+      "department": "Finance",
+      "title": "Auto-sync closed-won deals to invoicing",
+      "category": "Integration",
+      "problem": "Finance re-keys every closed deal from Salesforce into SAP by hand, which takes days and introduces errors.",
+      "proposedSolution": "",
+      "businessValue": "Saves about 120 hours per month and speeds up cash collection.",
+      "successMetrics": "",
+      "affectedSystems": [
+        "Salesforce",
+        "SAP"
+      ],
+      "usersAffected": "11-50",
+      "revenueImpact": "Medium ($50K-$250K)",
+      "regulatory": false,
+      "urgency": "High",
+      "targetDate": "2020-01-01",
+      "urgencyReason": ""
+    },
+    "expectFields": [
+      "targetDate"
+    ]
+  },
+  {
+    "case": "Impossible date",
+    "payload": {
+      "requesterName": "Priya Raman",
+      "requesterEmail": "priya.raman@example.com",
+      "department": "Finance",
+      "title": "Auto-sync closed-won deals to invoicing",
+      "category": "Integration",
+      "problem": "Finance re-keys every closed deal from Salesforce into SAP by hand, which takes days and introduces errors.",
+      "proposedSolution": "",
+      "businessValue": "Saves about 120 hours per month and speeds up cash collection.",
+      "successMetrics": "",
+      "affectedSystems": [
+        "Salesforce",
+        "SAP"
+      ],
+      "usersAffected": "11-50",
+      "revenueImpact": "Medium ($50K-$250K)",
+      "regulatory": false,
+      "urgency": "High",
+      "targetDate": "2099-02-30",
+      "urgencyReason": ""
+    },
+    "expectFields": [
+      "targetDate"
+    ]
+  },
+  {
+    "case": "Critical without reason or date",
+    "payload": {
+      "requesterName": "Priya Raman",
+      "requesterEmail": "priya.raman@example.com",
+      "department": "Finance",
+      "title": "Auto-sync closed-won deals to invoicing",
+      "category": "Integration",
+      "problem": "Finance re-keys every closed deal from Salesforce into SAP by hand, which takes days and introduces errors.",
+      "proposedSolution": "",
+      "businessValue": "Saves about 120 hours per month and speeds up cash collection.",
+      "successMetrics": "",
+      "affectedSystems": [
+        "Salesforce",
+        "SAP"
+      ],
+      "usersAffected": "11-50",
+      "revenueImpact": "Medium ($50K-$250K)",
+      "regulatory": false,
+      "urgency": "Critical",
+      "targetDate": "",
+      "urgencyReason": ""
+    },
+    "expectFields": [
+      "urgencyReason",
+      "targetDate"
+    ]
+  },
+  {
+    "case": "Regulatory as string",
+    "payload": {
+      "requesterName": "Priya Raman",
+      "requesterEmail": "priya.raman@example.com",
+      "department": "Finance",
+      "title": "Auto-sync closed-won deals to invoicing",
+      "category": "Integration",
+      "problem": "Finance re-keys every closed deal from Salesforce into SAP by hand, which takes days and introduces errors.",
+      "proposedSolution": "",
+      "businessValue": "Saves about 120 hours per month and speeds up cash collection.",
+      "successMetrics": "",
+      "affectedSystems": [
+        "Salesforce",
+        "SAP"
+      ],
+      "usersAffected": "11-50",
+      "revenueImpact": "Medium ($50K-$250K)",
+      "regulatory": "yes",
+      "urgency": "High",
+      "targetDate": "",
+      "urgencyReason": ""
+    },
+    "expectFields": [
+      "regulatory"
+    ]
+  },
+  {
+    "case": "Number instead of text",
+    "payload": {
+      "requesterName": "Priya Raman",
+      "requesterEmail": "priya.raman@example.com",
+      "department": "Finance",
+      "title": 12345,
+      "category": "Integration",
+      "problem": "Finance re-keys every closed deal from Salesforce into SAP by hand, which takes days and introduces errors.",
+      "proposedSolution": "",
+      "businessValue": "Saves about 120 hours per month and speeds up cash collection.",
+      "successMetrics": "",
+      "affectedSystems": [
+        "Salesforce",
+        "SAP"
+      ],
+      "usersAffected": "11-50",
+      "revenueImpact": "Medium ($50K-$250K)",
+      "regulatory": false,
+      "urgency": "High",
+      "targetDate": "",
+      "urgencyReason": ""
+    },
+    "expectFields": [
+      "title"
+    ]
+  },
+  {
+    "case": "Array body",
+    "payload": [
+      {
+        "requesterName": "Priya Raman",
+        "requesterEmail": "priya.raman@example.com",
+        "department": "Finance",
+        "title": "Auto-sync closed-won deals to invoicing",
+        "category": "Integration",
+        "problem": "Finance re-keys every closed deal from Salesforce into SAP by hand, which takes days and introduces errors.",
+        "proposedSolution": "",
+        "businessValue": "Saves about 120 hours per month and speeds up cash collection.",
+        "successMetrics": "",
+        "affectedSystems": [
+          "Salesforce",
+          "SAP"
+        ],
+        "usersAffected": "11-50",
+        "revenueImpact": "Medium ($50K-$250K)",
+        "regulatory": false,
+        "urgency": "High",
+        "targetDate": "",
+        "urgencyReason": ""
+      }
+    ],
+    "expectFields": [
+      "_form"
+    ]
+  }
+]

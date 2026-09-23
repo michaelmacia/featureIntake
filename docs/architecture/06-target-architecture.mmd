@@ -1,0 +1,29 @@
+flowchart LR
+  subgraph Users
+    BU([Business users])
+    PM([Triage])
+  end
+  subgraph Edge
+    WAF[WAF / CDN]
+  end
+  subgraph Platform["Container platform (2+ replicas)"]
+    APP[Feature Intake API + static UI]
+    WORKER[Outbox worker]
+  end
+  DB[(PostgreSQL<br/>managed, PITR)]
+  IDP[Azure AD / Okta<br/>OIDC]
+  JIRA[(Jira Cloud REST)]
+  SMTP[Email service]
+  TEAMS[Teams / Slack webhook]
+  OBS[Logs · metrics · uptime]
+
+  BU --> WAF --> APP
+  PM --> WAF
+  APP <-- OIDC --> IDP
+  APP --> DB
+  WORKER --> DB
+  WORKER --> JIRA
+  WORKER --> SMTP
+  WORKER --> TEAMS
+  APP -.-> OBS
+  WORKER -.-> OBS

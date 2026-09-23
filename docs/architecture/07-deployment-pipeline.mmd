@@ -1,0 +1,8 @@
+flowchart TB
+  DEV[Developer] -->|PR| GH[Git repository]
+  GH -->|on PR| CI[CI: npm test on Node 20 and 22]
+  CI -->|main branch| BUILD[Build container image<br/>non-root, node:22-alpine]
+  BUILD --> REG[(Container registry)]
+  REG --> STG[Staging<br/>seeded with test-data/seed.json]
+  STG -->|manual approval| PRD[Production]
+  PRD --> HC{{GET /api/health<br/>readiness + liveness}}

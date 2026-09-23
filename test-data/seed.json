@@ -1,0 +1,2498 @@
+[
+  {
+    "id": "FR-2026-0001",
+    "requesterName": "Hannah Okafor",
+    "title": "Auto-sync closed-won deals to invoicing",
+    "problem": "When a deal closes in Salesforce, finance re-keys the order into SAP by hand. It takes 2-3 days and about 4% of invoices have typos in amounts or PO numbers.",
+    "proposedSolution": "Push closed-won opportunities to SAP as draft sales orders automatically, with a review queue for exceptions.",
+    "businessValue": "Removes ~120 hours/month of manual entry and shortens days-sales-outstanding by an estimated 2 days.",
+    "successMetrics": "Invoice creation within 4 hours of close; re-key error rate below 0.5%.",
+    "urgencyReason": "",
+    "requesterEmail": "hannah.okafor@example.com",
+    "department": "Customer Support",
+    "category": "Integration",
+    "usersAffected": "1000+",
+    "revenueImpact": "Very High (> $1M)",
+    "urgency": "Medium",
+    "affectedSystems": [
+      "Salesforce",
+      "SAP"
+    ],
+    "regulatory": false,
+    "targetDate": "2026-08-21",
+    "status": "Submitted",
+    "priorityScore": 80,
+    "priorityBand": "P1",
+    "assignee": "",
+    "jiraKey": "",
+    "createdAt": "2026-06-01T06:43:42.114Z",
+    "updatedAt": "2026-06-01T06:43:42.114Z",
+    "history": [
+      {
+        "at": "2026-06-01T06:43:42.114Z",
+        "actor": "Hannah Okafor",
+        "type": "status",
+        "from": null,
+        "to": "Submitted"
+      }
+    ],
+    "comments": []
+  },
+  {
+    "id": "FR-2026-0002",
+    "requesterName": "Diego Alvarez",
+    "title": "Self-service password reset for customer portal",
+    "problem": "Customers who forget their portal password must call support. Password resets are 18% of all tier-1 tickets.",
+    "proposedSolution": "Email-based reset link with MFA confirmation.",
+    "businessValue": "Deflects ~1,100 tickets per month and improves CSAT for login issues.",
+    "successMetrics": "Password-related tickets down 80% within one quarter.",
+    "urgencyReason": "",
+    "requesterEmail": "diego.alvarez@example.com",
+    "department": "Operations",
+    "category": "New Feature",
+    "usersAffected": "11-50",
+    "revenueImpact": "Very High (> $1M)",
+    "urgency": "Low",
+    "affectedSystems": [
+      "Customer Portal"
+    ],
+    "regulatory": false,
+    "targetDate": "2026-07-27",
+    "status": "Needs Info",
+    "priorityScore": 49,
+    "priorityBand": "P3",
+    "assignee": "Taylor Brooks (PM)",
+    "jiraKey": "",
+    "createdAt": "2026-06-04T11:30:58.606Z",
+    "updatedAt": "2026-06-08T22:16:02.202Z",
+    "history": [
+      {
+        "at": "2026-06-04T11:30:58.606Z",
+        "actor": "Diego Alvarez",
+        "type": "status",
+        "from": null,
+        "to": "Submitted"
+      },
+      {
+        "at": "2026-06-07T16:44:41.807Z",
+        "actor": "Taylor Brooks (PM)",
+        "type": "status",
+        "from": "Submitted",
+        "to": "In Review"
+      },
+      {
+        "at": "2026-06-08T22:16:02.202Z",
+        "actor": "Taylor Brooks (PM)",
+        "type": "status",
+        "from": "In Review",
+        "to": "Needs Info"
+      }
+    ],
+    "comments": [
+      {
+        "at": "2026-06-07T16:44:41.807Z",
+        "author": "Taylor Brooks (PM)",
+        "text": "Picking this up for review."
+      },
+      {
+        "at": "2026-06-08T22:16:02.202Z",
+        "author": "Taylor Brooks (PM)",
+        "text": "Can you share how many records this affects per month and which teams own the process today?"
+      }
+    ]
+  },
+  {
+    "id": "FR-2026-0003",
+    "requesterName": "Noah Fischer",
+    "title": "Quarterly SOX access review report",
+    "problem": "Auditors need a list of who has access to financial systems each quarter. Today IT stitches it together from three exports in spreadsheets.",
+    "proposedSolution": "Scheduled report joining Workday org data with SAP role assignments.",
+    "businessValue": "Avoids audit findings and saves ~40 hours per quarter of IT and compliance time.",
+    "successMetrics": "Report produced automatically by day 3 of each quarter with zero manual edits.",
+    "urgencyReason": "",
+    "requesterEmail": "noah.fischer@example.com",
+    "department": "Product",
+    "category": "Compliance / Regulatory",
+    "usersAffected": "11-50",
+    "revenueImpact": "High ($250K-$1M)",
+    "urgency": "Medium",
+    "affectedSystems": [
+      "Workday",
+      "SAP",
+      "Data Warehouse"
+    ],
+    "regulatory": true,
+    "targetDate": "",
+    "status": "Done",
+    "priorityScore": 67,
+    "priorityBand": "P2",
+    "assignee": "Alex Rivera (PM)",
+    "jiraKey": "FEAT-102",
+    "createdAt": "2026-06-06T22:10:59.619Z",
+    "updatedAt": "2026-06-12T13:55:48.012Z",
+    "history": [
+      {
+        "at": "2026-06-06T22:10:59.619Z",
+        "actor": "Noah Fischer",
+        "type": "status",
+        "from": null,
+        "to": "Submitted"
+      },
+      {
+        "at": "2026-06-08T05:50:55.434Z",
+        "actor": "Alex Rivera (PM)",
+        "type": "status",
+        "from": "Submitted",
+        "to": "In Review"
+      },
+      {
+        "at": "2026-06-10T06:59:45.077Z",
+        "actor": "Alex Rivera (PM)",
+        "type": "status",
+        "from": "In Review",
+        "to": "Approved"
+      },
+      {
+        "at": "2026-06-11T11:41:08.886Z",
+        "actor": "Alex Rivera (PM)",
+        "type": "status",
+        "from": "Approved",
+        "to": "In Delivery"
+      },
+      {
+        "at": "2026-06-12T13:55:48.012Z",
+        "actor": "Alex Rivera (PM)",
+        "type": "status",
+        "from": "In Delivery",
+        "to": "Done"
+      }
+    ],
+    "comments": [
+      {
+        "at": "2026-06-08T05:50:55.434Z",
+        "author": "Alex Rivera (PM)",
+        "text": "Picking this up for review."
+      },
+      {
+        "at": "2026-06-10T06:59:45.077Z",
+        "author": "Alex Rivera (PM)",
+        "text": "Approved at weekly triage. Sizing with the delivery team next sprint."
+      }
+    ]
+  },
+  {
+    "id": "FR-2026-0004",
+    "requesterName": "Tomás Silva",
+    "title": "Bulk edit for support ticket tags",
+    "problem": "Support leads re-tag hundreds of tickets after taxonomy changes, one at a time.",
+    "proposedSolution": "",
+    "businessValue": "Saves team leads about 6 hours a week and keeps reporting categories accurate.",
+    "successMetrics": "",
+    "urgencyReason": "",
+    "requesterEmail": "tomas.silva@example.com",
+    "department": "HR",
+    "category": "Enhancement",
+    "usersAffected": "251-1000",
+    "revenueImpact": "None",
+    "urgency": "High",
+    "affectedSystems": [
+      "ServiceNow"
+    ],
+    "regulatory": false,
+    "targetDate": "2026-10-04",
+    "status": "Rejected",
+    "priorityScore": 55,
+    "priorityBand": "P2",
+    "assignee": "Alex Rivera (PM)",
+    "jiraKey": "",
+    "createdAt": "2026-06-09T17:23:32.546Z",
+    "updatedAt": "2026-06-11T17:59:54.543Z",
+    "history": [
+      {
+        "at": "2026-06-09T17:23:32.546Z",
+        "actor": "Tomás Silva",
+        "type": "status",
+        "from": null,
+        "to": "Submitted"
+      },
+      {
+        "at": "2026-06-11T17:59:54.543Z",
+        "actor": "Alex Rivera (PM)",
+        "type": "status",
+        "from": "Submitted",
+        "to": "Rejected"
+      }
+    ],
+    "comments": [
+      {
+        "at": "2026-06-11T17:59:54.543Z",
+        "author": "Alex Rivera (PM)",
+        "text": "Duplicate of an item already on the roadmap for next quarter. Linking and closing."
+      }
+    ]
+  },
+  {
+    "id": "FR-2026-0005",
+    "requesterName": "Zoë Kowalski",
+    "title": "Churn-risk dashboard for account managers",
+    "problem": "Account managers only learn a customer is unhappy when they fail to renew. Usage and ticket signals exist but are scattered.",
+    "proposedSolution": "Weekly churn-risk score per account surfaced in Salesforce.",
+    "businessValue": "A 1-point reduction in gross churn is worth about $900K ARR.",
+    "successMetrics": "Gross churn down 1 point year over year; 90% of at-risk accounts contacted within 14 days.",
+    "urgencyReason": "Committed to a customer or auditor date; slipping has contractual consequences.",
+    "requesterEmail": "zoe.kowalski@example.com",
+    "department": "Customer Support",
+    "category": "Reporting & Analytics",
+    "usersAffected": "11-50",
+    "revenueImpact": "None",
+    "urgency": "Critical",
+    "affectedSystems": [
+      "Data Warehouse",
+      "Salesforce"
+    ],
+    "regulatory": false,
+    "targetDate": "2026-10-15",
+    "status": "In Review",
+    "priorityScore": 51,
+    "priorityBand": "P3",
+    "assignee": "Taylor Brooks (PM)",
+    "jiraKey": "",
+    "createdAt": "2026-06-12T16:40:32.285Z",
+    "updatedAt": "2026-06-16T00:31:39.130Z",
+    "history": [
+      {
+        "at": "2026-06-12T16:40:32.285Z",
+        "actor": "Zoë Kowalski",
+        "type": "status",
+        "from": null,
+        "to": "Submitted"
+      },
+      {
+        "at": "2026-06-16T00:31:39.130Z",
+        "actor": "Taylor Brooks (PM)",
+        "type": "status",
+        "from": "Submitted",
+        "to": "In Review"
+      }
+    ],
+    "comments": [
+      {
+        "at": "2026-06-16T00:31:39.130Z",
+        "author": "Taylor Brooks (PM)",
+        "text": "Picking this up for review."
+      }
+    ]
+  },
+  {
+    "id": "FR-2026-0006",
+    "requesterName": "Priya Raman",
+    "title": "Automate new-hire laptop provisioning",
+    "problem": "IT learns about new hires from a manager email, sometimes after the start date. 1 in 5 new hires starts without a working laptop.",
+    "proposedSolution": "Trigger a ServiceNow provisioning ticket when an offer is accepted in Workday.",
+    "businessValue": "Every new hire productive on day one; fewer escalations to IT leadership.",
+    "successMetrics": "98% of new hires have equipment on day one.",
+    "urgencyReason": "",
+    "requesterEmail": "priya.raman@example.com",
+    "department": "Finance",
+    "category": "Automation",
+    "usersAffected": "51-250",
+    "revenueImpact": "High ($250K-$1M)",
+    "urgency": "Medium",
+    "affectedSystems": [
+      "Workday",
+      "ServiceNow",
+      "Internal Tools"
+    ],
+    "regulatory": false,
+    "targetDate": "2026-08-29",
+    "status": "Submitted",
+    "priorityScore": 59,
+    "priorityBand": "P2",
+    "assignee": "",
+    "jiraKey": "",
+    "createdAt": "2026-06-15T10:26:02.733Z",
+    "updatedAt": "2026-06-15T10:26:02.733Z",
+    "history": [
+      {
+        "at": "2026-06-15T10:26:02.733Z",
+        "actor": "Priya Raman",
+        "type": "status",
+        "from": null,
+        "to": "Submitted"
+      }
+    ],
+    "comments": []
+  },
+  {
+    "id": "FR-2026-0007",
+    "requesterName": "Marcus Bell",
+    "title": "Mobile app: save items to wishlist",
+    "problem": "Customers cannot save products to come back to later on mobile, so they screenshot them or abandon the session.",
+    "proposedSolution": "Heart icon on product cards synced to the customer account.",
+    "businessValue": "Wishlists lift return-visit conversion by 3-5% in industry benchmarks.",
+    "successMetrics": "Return-visit conversion up 3% in 90 days.",
+    "urgencyReason": "",
+    "requesterEmail": "marcus.bell@example.com",
+    "department": "Sales",
+    "category": "New Feature",
+    "usersAffected": "11-50",
+    "revenueImpact": "High ($250K-$1M)",
+    "urgency": "High",
+    "affectedSystems": [
+      "Mobile App"
+    ],
+    "regulatory": false,
+    "targetDate": "",
+    "status": "In Delivery",
+    "priorityScore": 62,
+    "priorityBand": "P2",
+    "assignee": "Alex Rivera (PM)",
+    "jiraKey": "FEAT-106",
+    "createdAt": "2026-06-18T06:19:10.294Z",
+    "updatedAt": "2026-06-26T19:00:25.761Z",
+    "history": [
+      {
+        "at": "2026-06-18T06:19:10.294Z",
+        "actor": "Marcus Bell",
+        "type": "status",
+        "from": null,
+        "to": "Submitted"
+      },
+      {
+        "at": "2026-06-22T13:52:43.009Z",
+        "actor": "Alex Rivera (PM)",
+        "type": "status",
+        "from": "Submitted",
+        "to": "In Review"
+      },
+      {
+        "at": "2026-06-25T16:12:48.500Z",
+        "actor": "Alex Rivera (PM)",
+        "type": "status",
+        "from": "In Review",
+        "to": "Approved"
+      },
+      {
+        "at": "2026-06-26T19:00:25.761Z",
+        "actor": "Alex Rivera (PM)",
+        "type": "status",
+        "from": "Approved",
+        "to": "In Delivery"
+      }
+    ],
+    "comments": [
+      {
+        "at": "2026-06-22T13:52:43.009Z",
+        "author": "Alex Rivera (PM)",
+        "text": "Picking this up for review."
+      },
+      {
+        "at": "2026-06-25T16:12:48.500Z",
+        "author": "Alex Rivera (PM)",
+        "text": "Approved at weekly triage. Sizing with the delivery team next sprint."
+      }
+    ]
+  },
+  {
+    "id": "FR-2026-0008",
+    "requesterName": "Leila Haddad",
+    "title": "Commission statements in the sales portal",
+    "problem": "Reps email finance monthly to ask how their commission was calculated, creating ~300 inquiries per cycle.",
+    "proposedSolution": "Line-item commission breakdown visible to each rep.",
+    "businessValue": "Reduces finance inquiries and disputes; improves rep trust in comp plan.",
+    "successMetrics": "Commission inquiries down 70%.",
+    "urgencyReason": "",
+    "requesterEmail": "leila.haddad@example.com",
+    "department": "Finance",
+    "category": "Enhancement",
+    "usersAffected": "51-250",
+    "revenueImpact": "High ($250K-$1M)",
+    "urgency": "High",
+    "affectedSystems": [
+      "Salesforce",
+      "Internal Tools"
+    ],
+    "regulatory": false,
+    "targetDate": "",
+    "status": "In Review",
+    "priorityScore": 69,
+    "priorityBand": "P2",
+    "assignee": "Taylor Brooks (PM)",
+    "jiraKey": "",
+    "createdAt": "2026-06-21T13:23:40.246Z",
+    "updatedAt": "2026-06-26T18:02:08.953Z",
+    "history": [
+      {
+        "at": "2026-06-21T13:23:40.246Z",
+        "actor": "Leila Haddad",
+        "type": "status",
+        "from": null,
+        "to": "Submitted"
+      },
+      {
+        "at": "2026-06-26T18:02:08.953Z",
+        "actor": "Taylor Brooks (PM)",
+        "type": "status",
+        "from": "Submitted",
+        "to": "In Review"
+      }
+    ],
+    "comments": [
+      {
+        "at": "2026-06-26T18:02:08.953Z",
+        "author": "Taylor Brooks (PM)",
+        "text": "Picking this up for review."
+      }
+    ]
+  },
+  {
+    "id": "FR-2026-0009",
+    "requesterName": "Leila Haddad",
+    "title": "GDPR data-subject request workflow",
+    "problem": "Data-subject access and deletion requests arrive by email and are tracked in a spreadsheet. We have 30 days to respond and missed two deadlines last year.",
+    "proposedSolution": "Portal form that opens a tracked case with SLA timers and a checklist per system.",
+    "businessValue": "Avoids regulatory fines (up to 4% of turnover) and reputational damage.",
+    "successMetrics": "100% of DSARs answered within 30 days.",
+    "urgencyReason": "",
+    "requesterEmail": "leila.haddad@example.com",
+    "department": "Finance",
+    "category": "Compliance / Regulatory",
+    "usersAffected": "11-50",
+    "revenueImpact": "Low (< $50K)",
+    "urgency": "Low",
+    "affectedSystems": [
+      "Customer Portal",
+      "ServiceNow",
+      "Data Warehouse"
+    ],
+    "regulatory": true,
+    "targetDate": "",
+    "status": "In Delivery",
+    "priorityScore": 43,
+    "priorityBand": "P3",
+    "assignee": "Casey Morgan (BA)",
+    "jiraKey": "FEAT-108",
+    "createdAt": "2026-06-23T18:14:26.843Z",
+    "updatedAt": "2026-07-06T02:10:44.227Z",
+    "history": [
+      {
+        "at": "2026-06-23T18:14:26.843Z",
+        "actor": "Leila Haddad",
+        "type": "status",
+        "from": null,
+        "to": "Submitted"
+      },
+      {
+        "at": "2026-06-28T18:49:38.762Z",
+        "actor": "Casey Morgan (BA)",
+        "type": "status",
+        "from": "Submitted",
+        "to": "In Review"
+      },
+      {
+        "at": "2026-07-02T23:17:43.149Z",
+        "actor": "Casey Morgan (BA)",
+        "type": "status",
+        "from": "In Review",
+        "to": "Approved"
+      },
+      {
+        "at": "2026-07-06T02:10:44.227Z",
+        "actor": "Casey Morgan (BA)",
+        "type": "status",
+        "from": "Approved",
+        "to": "In Delivery"
+      }
+    ],
+    "comments": [
+      {
+        "at": "2026-06-28T18:49:38.762Z",
+        "author": "Casey Morgan (BA)",
+        "text": "Picking this up for review."
+      },
+      {
+        "at": "2026-07-02T23:17:43.149Z",
+        "author": "Casey Morgan (BA)",
+        "text": "Approved at weekly triage. Sizing with the delivery team next sprint."
+      }
+    ]
+  },
+  {
+    "id": "FR-2026-0010",
+    "requesterName": "Marcus Bell",
+    "title": "Marketing campaign ROI report",
+    "problem": "Marketing cannot tie pipeline back to campaigns because campaign IDs are lost when leads convert.",
+    "proposedSolution": "Preserve campaign attribution through lead conversion and expose it in a dashboard.",
+    "businessValue": "Lets us reallocate ~$2M annual spend toward campaigns that actually produce pipeline.",
+    "successMetrics": "Attribution available for 95% of opportunities.",
+    "urgencyReason": "",
+    "requesterEmail": "marcus.bell@example.com",
+    "department": "Sales",
+    "category": "Reporting & Analytics",
+    "usersAffected": "251-1000",
+    "revenueImpact": "Low (< $50K)",
+    "urgency": "High",
+    "affectedSystems": [
+      "Salesforce",
+      "Data Warehouse"
+    ],
+    "regulatory": false,
+    "targetDate": "2026-08-02",
+    "status": "Needs Info",
+    "priorityScore": 62,
+    "priorityBand": "P2",
+    "assignee": "Taylor Brooks (PM)",
+    "jiraKey": "",
+    "createdAt": "2026-06-26T10:12:52.761Z",
+    "updatedAt": "2026-07-01T16:43:13.181Z",
+    "history": [
+      {
+        "at": "2026-06-26T10:12:52.761Z",
+        "actor": "Marcus Bell",
+        "type": "status",
+        "from": null,
+        "to": "Submitted"
+      },
+      {
+        "at": "2026-06-29T13:09:30.223Z",
+        "actor": "Taylor Brooks (PM)",
+        "type": "status",
+        "from": "Submitted",
+        "to": "In Review"
+      },
+      {
+        "at": "2026-07-01T16:43:13.181Z",
+        "actor": "Taylor Brooks (PM)",
+        "type": "status",
+        "from": "In Review",
+        "to": "Needs Info"
+      }
+    ],
+    "comments": [
+      {
+        "at": "2026-06-29T13:09:30.223Z",
+        "author": "Taylor Brooks (PM)",
+        "text": "Picking this up for review."
+      },
+      {
+        "at": "2026-07-01T16:43:13.181Z",
+        "author": "Taylor Brooks (PM)",
+        "text": "Can you share how many records this affects per month and which teams own the process today?"
+      }
+    ]
+  },
+  {
+    "id": "FR-2026-0011",
+    "requesterName": "Priya Raman",
+    "title": "Expense receipt capture by photo",
+    "problem": "Employees keep paper receipts and upload scans at month end; many are lost, delaying reimbursement.",
+    "proposedSolution": "Snap a photo in the mobile app and auto-extract amount, date and merchant.",
+    "businessValue": "Faster reimbursements and fewer policy exceptions for missing receipts.",
+    "successMetrics": "",
+    "urgencyReason": "",
+    "requesterEmail": "priya.raman@example.com",
+    "department": "Finance",
+    "category": "New Feature",
+    "usersAffected": "1000+",
+    "revenueImpact": "Low (< $50K)",
+    "urgency": "Medium",
+    "affectedSystems": [
+      "Mobile App",
+      "SAP"
+    ],
+    "regulatory": false,
+    "targetDate": "",
+    "status": "Approved",
+    "priorityScore": 59,
+    "priorityBand": "P2",
+    "assignee": "Casey Morgan (BA)",
+    "jiraKey": "FEAT-110",
+    "createdAt": "2026-06-30T00:39:21.662Z",
+    "updatedAt": "2026-07-07T06:45:14.244Z",
+    "history": [
+      {
+        "at": "2026-06-30T00:39:21.662Z",
+        "actor": "Priya Raman",
+        "type": "status",
+        "from": null,
+        "to": "Submitted"
+      },
+      {
+        "at": "2026-07-02T05:43:31.274Z",
+        "actor": "Casey Morgan (BA)",
+        "type": "status",
+        "from": "Submitted",
+        "to": "In Review"
+      },
+      {
+        "at": "2026-07-07T06:45:14.244Z",
+        "actor": "Casey Morgan (BA)",
+        "type": "status",
+        "from": "In Review",
+        "to": "Approved"
+      }
+    ],
+    "comments": [
+      {
+        "at": "2026-07-02T05:43:31.274Z",
+        "author": "Casey Morgan (BA)",
+        "text": "Picking this up for review."
+      },
+      {
+        "at": "2026-07-07T06:45:14.244Z",
+        "author": "Casey Morgan (BA)",
+        "text": "Approved at weekly triage. Sizing with the delivery team next sprint."
+      }
+    ]
+  },
+  {
+    "id": "FR-2026-0012",
+    "requesterName": "Aiko Tanaka",
+    "title": "Warehouse pick-list optimisation",
+    "problem": "Pick lists are sorted by order number rather than bin location, so pickers walk the warehouse several times per batch.",
+    "proposedSolution": "Sort pick lists by walking route.",
+    "businessValue": "Estimated 15% pick-time reduction across 3 warehouses.",
+    "successMetrics": "Average lines picked per hour up 15%.",
+    "urgencyReason": "",
+    "requesterEmail": "aiko.tanaka@example.com",
+    "department": "Marketing",
+    "category": "Enhancement",
+    "usersAffected": "1-10",
+    "revenueImpact": "Very High (> $1M)",
+    "urgency": "High",
+    "affectedSystems": [
+      "SAP",
+      "Internal Tools"
+    ],
+    "regulatory": false,
+    "targetDate": "2026-10-06",
+    "status": "Approved",
+    "priorityScore": 62,
+    "priorityBand": "P2",
+    "assignee": "Taylor Brooks (PM)",
+    "jiraKey": "FEAT-111",
+    "createdAt": "2026-07-02T17:44:23.656Z",
+    "updatedAt": "2026-07-14T09:36:31.122Z",
+    "history": [
+      {
+        "at": "2026-07-02T17:44:23.656Z",
+        "actor": "Aiko Tanaka",
+        "type": "status",
+        "from": null,
+        "to": "Submitted"
+      },
+      {
+        "at": "2026-07-03T23:30:47.536Z",
+        "actor": "Taylor Brooks (PM)",
+        "type": "status",
+        "from": "Submitted",
+        "to": "In Review"
+      },
+      {
+        "at": "2026-07-06T23:44:12.109Z",
+        "actor": "Taylor Brooks (PM)",
+        "type": "status",
+        "from": "In Review",
+        "to": "Needs Info"
+      },
+      {
+        "at": "2026-07-09T03:23:31.646Z",
+        "actor": "Taylor Brooks (PM)",
+        "type": "status",
+        "from": "Needs Info",
+        "to": "In Review"
+      },
+      {
+        "at": "2026-07-14T09:36:31.122Z",
+        "actor": "Taylor Brooks (PM)",
+        "type": "status",
+        "from": "In Review",
+        "to": "Approved"
+      }
+    ],
+    "comments": [
+      {
+        "at": "2026-07-03T23:30:47.536Z",
+        "author": "Taylor Brooks (PM)",
+        "text": "Picking this up for review."
+      },
+      {
+        "at": "2026-07-06T23:44:12.109Z",
+        "author": "Taylor Brooks (PM)",
+        "text": "Can you share how many records this affects per month and which teams own the process today?"
+      },
+      {
+        "at": "2026-07-09T03:23:31.646Z",
+        "author": "Taylor Brooks (PM)",
+        "text": "Picking this up for review."
+      },
+      {
+        "at": "2026-07-09T03:23:31.646Z",
+        "author": "Aiko Tanaka",
+        "text": "Roughly 2,000 records a month; the Operations team owns it today."
+      },
+      {
+        "at": "2026-07-14T09:36:31.122Z",
+        "author": "Taylor Brooks (PM)",
+        "text": "Approved at weekly triage. Sizing with the delivery team next sprint."
+      }
+    ]
+  },
+  {
+    "id": "FR-2026-0013",
+    "requesterName": "Sam Patel",
+    "title": "Slack alerts for P1 support tickets",
+    "problem": "On-call engineers miss P1 tickets overnight because email alerts are filtered or delayed.",
+    "proposedSolution": "",
+    "businessValue": "Faster response on the incidents that cost us most; protects enterprise SLAs.",
+    "successMetrics": "P1 acknowledgement under 10 minutes.",
+    "urgencyReason": "",
+    "requesterEmail": "sam.patel@example.com",
+    "department": "IT",
+    "category": "Integration",
+    "usersAffected": "51-250",
+    "revenueImpact": "None",
+    "urgency": "Low",
+    "affectedSystems": [
+      "ServiceNow",
+      "Internal Tools"
+    ],
+    "regulatory": false,
+    "targetDate": "2026-11-19",
+    "status": "In Review",
+    "priorityScore": 28,
+    "priorityBand": "P4",
+    "assignee": "Taylor Brooks (PM)",
+    "jiraKey": "",
+    "createdAt": "2026-07-05T16:10:15.614Z",
+    "updatedAt": "2026-07-08T17:25:12.226Z",
+    "history": [
+      {
+        "at": "2026-07-05T16:10:15.614Z",
+        "actor": "Sam Patel",
+        "type": "status",
+        "from": null,
+        "to": "Submitted"
+      },
+      {
+        "at": "2026-07-08T17:25:12.226Z",
+        "actor": "Taylor Brooks (PM)",
+        "type": "status",
+        "from": "Submitted",
+        "to": "In Review"
+      }
+    ],
+    "comments": [
+      {
+        "at": "2026-07-08T17:25:12.226Z",
+        "author": "Taylor Brooks (PM)",
+        "text": "Picking this up for review."
+      }
+    ]
+  },
+  {
+    "id": "FR-2026-0014",
+    "requesterName": "Tomás Silva",
+    "title": "Contract renewal reminders",
+    "problem": "Legal and sales lose track of auto-renewal notice windows; last year we auto-renewed two vendor contracts we meant to cancel.",
+    "proposedSolution": "Reminders 90/60/30 days before notice deadlines.",
+    "businessValue": "Avoids ~$180K a year in unwanted renewals.",
+    "successMetrics": "Zero unintended renewals.",
+    "urgencyReason": "",
+    "requesterEmail": "tomas.silva@example.com",
+    "department": "HR",
+    "category": "Automation",
+    "usersAffected": "1-10",
+    "revenueImpact": "Medium ($50K-$250K)",
+    "urgency": "Low",
+    "affectedSystems": [
+      "Salesforce"
+    ],
+    "regulatory": false,
+    "targetDate": "2026-12-23",
+    "status": "Rejected",
+    "priorityScore": 28,
+    "priorityBand": "P4",
+    "assignee": "Alex Rivera (PM)",
+    "jiraKey": "",
+    "createdAt": "2026-07-08T05:38:23.022Z",
+    "updatedAt": "2026-07-13T11:20:48.069Z",
+    "history": [
+      {
+        "at": "2026-07-08T05:38:23.022Z",
+        "actor": "Tomás Silva",
+        "type": "status",
+        "from": null,
+        "to": "Submitted"
+      },
+      {
+        "at": "2026-07-13T11:20:48.069Z",
+        "actor": "Alex Rivera (PM)",
+        "type": "status",
+        "from": "Submitted",
+        "to": "Rejected"
+      }
+    ],
+    "comments": [
+      {
+        "at": "2026-07-13T11:20:48.069Z",
+        "author": "Alex Rivera (PM)",
+        "text": "Duplicate of an item already on the roadmap for next quarter. Linking and closing."
+      }
+    ]
+  },
+  {
+    "id": "FR-2026-0015",
+    "requesterName": "Zoë Kowalski",
+    "title": "Accessibility fixes for checkout",
+    "problem": "An external audit found WCAG 2.1 AA failures in checkout: unlabeled fields and keyboard traps.",
+    "proposedSolution": "Remediate audit findings and add automated accessibility tests to CI.",
+    "businessValue": "Reduces legal exposure and opens checkout to customers using assistive technology.",
+    "successMetrics": "Zero critical findings on re-audit.",
+    "urgencyReason": "",
+    "requesterEmail": "zoe.kowalski@example.com",
+    "department": "Customer Support",
+    "category": "Compliance / Regulatory",
+    "usersAffected": "1000+",
+    "revenueImpact": "Medium ($50K-$250K)",
+    "urgency": "Medium",
+    "affectedSystems": [
+      "Customer Portal",
+      "Mobile App"
+    ],
+    "regulatory": true,
+    "targetDate": "",
+    "status": "Approved",
+    "priorityScore": 81,
+    "priorityBand": "P1",
+    "assignee": "Casey Morgan (BA)",
+    "jiraKey": "FEAT-114",
+    "createdAt": "2026-07-10T19:32:31.170Z",
+    "updatedAt": "2026-07-17T01:10:16.249Z",
+    "history": [
+      {
+        "at": "2026-07-10T19:32:31.170Z",
+        "actor": "Zoë Kowalski",
+        "type": "status",
+        "from": null,
+        "to": "Submitted"
+      },
+      {
+        "at": "2026-07-13T21:02:59.543Z",
+        "actor": "Casey Morgan (BA)",
+        "type": "status",
+        "from": "Submitted",
+        "to": "In Review"
+      },
+      {
+        "at": "2026-07-17T01:10:16.249Z",
+        "actor": "Casey Morgan (BA)",
+        "type": "status",
+        "from": "In Review",
+        "to": "Approved"
+      }
+    ],
+    "comments": [
+      {
+        "at": "2026-07-13T21:02:59.543Z",
+        "author": "Casey Morgan (BA)",
+        "text": "Picking this up for review."
+      },
+      {
+        "at": "2026-07-17T01:10:16.249Z",
+        "author": "Casey Morgan (BA)",
+        "text": "Approved at weekly triage. Sizing with the delivery team next sprint."
+      }
+    ]
+  },
+  {
+    "id": "FR-2026-0016",
+    "requesterName": "Sam Patel",
+    "title": "Auto-sync closed-won deals to invoicing (North America)",
+    "problem": "When a deal closes in Salesforce, finance re-keys the order into SAP by hand. It takes 2-3 days and about 4% of invoices have typos in amounts or PO numbers.",
+    "proposedSolution": "Push closed-won opportunities to SAP as draft sales orders automatically, with a review queue for exceptions.",
+    "businessValue": "Removes ~120 hours/month of manual entry and shortens days-sales-outstanding by an estimated 2 days.",
+    "successMetrics": "Invoice creation within 4 hours of close; re-key error rate below 0.5%.",
+    "urgencyReason": "",
+    "requesterEmail": "sam.patel@example.com",
+    "department": "IT",
+    "category": "Integration",
+    "usersAffected": "1000+",
+    "revenueImpact": "None",
+    "urgency": "Medium",
+    "affectedSystems": [
+      "Salesforce",
+      "SAP"
+    ],
+    "regulatory": false,
+    "targetDate": "2026-08-15",
+    "status": "In Delivery",
+    "priorityScore": 52,
+    "priorityBand": "P3",
+    "assignee": "Alex Rivera (PM)",
+    "jiraKey": "FEAT-115",
+    "createdAt": "2026-07-14T03:11:32.305Z",
+    "updatedAt": "2026-07-23T15:40:27.354Z",
+    "history": [
+      {
+        "at": "2026-07-14T03:11:32.305Z",
+        "actor": "Sam Patel",
+        "type": "status",
+        "from": null,
+        "to": "Submitted"
+      },
+      {
+        "at": "2026-07-18T10:01:21.431Z",
+        "actor": "Alex Rivera (PM)",
+        "type": "status",
+        "from": "Submitted",
+        "to": "In Review"
+      },
+      {
+        "at": "2026-07-21T11:22:51.250Z",
+        "actor": "Alex Rivera (PM)",
+        "type": "status",
+        "from": "In Review",
+        "to": "Approved"
+      },
+      {
+        "at": "2026-07-23T15:40:27.354Z",
+        "actor": "Alex Rivera (PM)",
+        "type": "status",
+        "from": "Approved",
+        "to": "In Delivery"
+      }
+    ],
+    "comments": [
+      {
+        "at": "2026-07-18T10:01:21.431Z",
+        "author": "Alex Rivera (PM)",
+        "text": "Picking this up for review."
+      },
+      {
+        "at": "2026-07-21T11:22:51.250Z",
+        "author": "Alex Rivera (PM)",
+        "text": "Approved at weekly triage. Sizing with the delivery team next sprint."
+      }
+    ]
+  },
+  {
+    "id": "FR-2026-0017",
+    "requesterName": "Hannah Okafor",
+    "title": "Self-service password reset for customer portal (APAC)",
+    "problem": "Customers who forget their portal password must call support. Password resets are 18% of all tier-1 tickets.",
+    "proposedSolution": "Email-based reset link with MFA confirmation.",
+    "businessValue": "Deflects ~1,100 tickets per month and improves CSAT for login issues.",
+    "successMetrics": "Password-related tickets down 80% within one quarter.",
+    "urgencyReason": "",
+    "requesterEmail": "hannah.okafor@example.com",
+    "department": "Customer Support",
+    "category": "New Feature",
+    "usersAffected": "11-50",
+    "revenueImpact": "High ($250K-$1M)",
+    "urgency": "High",
+    "affectedSystems": [
+      "Customer Portal"
+    ],
+    "regulatory": false,
+    "targetDate": "2026-12-20",
+    "status": "Done",
+    "priorityScore": 62,
+    "priorityBand": "P2",
+    "assignee": "Casey Morgan (BA)",
+    "jiraKey": "FEAT-116",
+    "createdAt": "2026-07-16T10:58:08.148Z",
+    "updatedAt": "2026-07-27T22:20:47.932Z",
+    "history": [
+      {
+        "at": "2026-07-16T10:58:08.148Z",
+        "actor": "Hannah Okafor",
+        "type": "status",
+        "from": null,
+        "to": "Submitted"
+      },
+      {
+        "at": "2026-07-20T12:29:08.114Z",
+        "actor": "Casey Morgan (BA)",
+        "type": "status",
+        "from": "Submitted",
+        "to": "In Review"
+      },
+      {
+        "at": "2026-07-23T13:32:39.984Z",
+        "actor": "Casey Morgan (BA)",
+        "type": "status",
+        "from": "In Review",
+        "to": "Approved"
+      },
+      {
+        "at": "2026-07-24T18:51:01.430Z",
+        "actor": "Casey Morgan (BA)",
+        "type": "status",
+        "from": "Approved",
+        "to": "In Delivery"
+      },
+      {
+        "at": "2026-07-27T22:20:47.932Z",
+        "actor": "Casey Morgan (BA)",
+        "type": "status",
+        "from": "In Delivery",
+        "to": "Done"
+      }
+    ],
+    "comments": [
+      {
+        "at": "2026-07-20T12:29:08.114Z",
+        "author": "Casey Morgan (BA)",
+        "text": "Picking this up for review."
+      },
+      {
+        "at": "2026-07-23T13:32:39.984Z",
+        "author": "Casey Morgan (BA)",
+        "text": "Approved at weekly triage. Sizing with the delivery team next sprint."
+      }
+    ]
+  },
+  {
+    "id": "FR-2026-0018",
+    "requesterName": "Leila Haddad",
+    "title": "Quarterly SOX access review report (EMEA)",
+    "problem": "Auditors need a list of who has access to financial systems each quarter. Today IT stitches it together from three exports in spreadsheets.",
+    "proposedSolution": "Scheduled report joining Workday org data with SAP role assignments.",
+    "businessValue": "Avoids audit findings and saves ~40 hours per quarter of IT and compliance time.",
+    "successMetrics": "Report produced automatically by day 3 of each quarter with zero manual edits.",
+    "urgencyReason": "",
+    "requesterEmail": "leila.haddad@example.com",
+    "department": "Finance",
+    "category": "Compliance / Regulatory",
+    "usersAffected": "51-250",
+    "revenueImpact": "Medium ($50K-$250K)",
+    "urgency": "Low",
+    "affectedSystems": [
+      "Workday",
+      "SAP",
+      "Data Warehouse"
+    ],
+    "regulatory": true,
+    "targetDate": "2026-10-26",
+    "status": "In Review",
+    "priorityScore": 57,
+    "priorityBand": "P2",
+    "assignee": "Alex Rivera (PM)",
+    "jiraKey": "",
+    "createdAt": "2026-07-19T08:48:14.488Z",
+    "updatedAt": "2026-07-21T09:38:47.931Z",
+    "history": [
+      {
+        "at": "2026-07-19T08:48:14.488Z",
+        "actor": "Leila Haddad",
+        "type": "status",
+        "from": null,
+        "to": "Submitted"
+      },
+      {
+        "at": "2026-07-21T09:38:47.931Z",
+        "actor": "Alex Rivera (PM)",
+        "type": "status",
+        "from": "Submitted",
+        "to": "In Review"
+      }
+    ],
+    "comments": [
+      {
+        "at": "2026-07-21T09:38:47.931Z",
+        "author": "Alex Rivera (PM)",
+        "text": "Picking this up for review."
+      }
+    ]
+  },
+  {
+    "id": "FR-2026-0019",
+    "requesterName": "Marcus Bell",
+    "title": "Bulk edit for support ticket tags (phase 2)",
+    "problem": "Support leads re-tag hundreds of tickets after taxonomy changes, one at a time.",
+    "proposedSolution": "",
+    "businessValue": "Saves team leads about 6 hours a week and keeps reporting categories accurate.",
+    "successMetrics": "",
+    "urgencyReason": "",
+    "requesterEmail": "marcus.bell@example.com",
+    "department": "Sales",
+    "category": "Enhancement",
+    "usersAffected": "1000+",
+    "revenueImpact": "High ($250K-$1M)",
+    "urgency": "Medium",
+    "affectedSystems": [
+      "ServiceNow"
+    ],
+    "regulatory": false,
+    "targetDate": "",
+    "status": "Approved",
+    "priorityScore": 73,
+    "priorityBand": "P2",
+    "assignee": "Jordan Kim (PM)",
+    "jiraKey": "FEAT-118",
+    "createdAt": "2026-07-22T17:08:58.618Z",
+    "updatedAt": "2026-08-04T08:26:39.297Z",
+    "history": [
+      {
+        "at": "2026-07-22T17:08:58.618Z",
+        "actor": "Marcus Bell",
+        "type": "status",
+        "from": null,
+        "to": "Submitted"
+      },
+      {
+        "at": "2026-07-23T18:53:24.731Z",
+        "actor": "Jordan Kim (PM)",
+        "type": "status",
+        "from": "Submitted",
+        "to": "In Review"
+      },
+      {
+        "at": "2026-07-28T00:58:42.405Z",
+        "actor": "Jordan Kim (PM)",
+        "type": "status",
+        "from": "In Review",
+        "to": "Needs Info"
+      },
+      {
+        "at": "2026-07-30T07:27:36.483Z",
+        "actor": "Jordan Kim (PM)",
+        "type": "status",
+        "from": "Needs Info",
+        "to": "In Review"
+      },
+      {
+        "at": "2026-08-04T08:26:39.297Z",
+        "actor": "Jordan Kim (PM)",
+        "type": "status",
+        "from": "In Review",
+        "to": "Approved"
+      }
+    ],
+    "comments": [
+      {
+        "at": "2026-07-23T18:53:24.731Z",
+        "author": "Jordan Kim (PM)",
+        "text": "Picking this up for review."
+      },
+      {
+        "at": "2026-07-28T00:58:42.405Z",
+        "author": "Jordan Kim (PM)",
+        "text": "Can you share how many records this affects per month and which teams own the process today?"
+      },
+      {
+        "at": "2026-07-30T07:27:36.483Z",
+        "author": "Jordan Kim (PM)",
+        "text": "Picking this up for review."
+      },
+      {
+        "at": "2026-07-30T07:27:36.483Z",
+        "author": "Marcus Bell",
+        "text": "Roughly 2,000 records a month; the Operations team owns it today."
+      },
+      {
+        "at": "2026-08-04T08:26:39.297Z",
+        "author": "Jordan Kim (PM)",
+        "text": "Approved at weekly triage. Sizing with the delivery team next sprint."
+      }
+    ]
+  },
+  {
+    "id": "FR-2026-0020",
+    "requesterName": "Leila Haddad",
+    "title": "Churn-risk dashboard for account managers (phase 2)",
+    "problem": "Account managers only learn a customer is unhappy when they fail to renew. Usage and ticket signals exist but are scattered.",
+    "proposedSolution": "Weekly churn-risk score per account surfaced in Salesforce.",
+    "businessValue": "A 1-point reduction in gross churn is worth about $900K ARR.",
+    "successMetrics": "Gross churn down 1 point year over year; 90% of at-risk accounts contacted within 14 days.",
+    "urgencyReason": "",
+    "requesterEmail": "leila.haddad@example.com",
+    "department": "Finance",
+    "category": "Reporting & Analytics",
+    "usersAffected": "11-50",
+    "revenueImpact": "High ($250K-$1M)",
+    "urgency": "High",
+    "affectedSystems": [
+      "Data Warehouse",
+      "Salesforce"
+    ],
+    "regulatory": false,
+    "targetDate": "2026-08-30",
+    "status": "Needs Info",
+    "priorityScore": 62,
+    "priorityBand": "P2",
+    "assignee": "Jordan Kim (PM)",
+    "jiraKey": "",
+    "createdAt": "2026-07-24T20:27:04.512Z",
+    "updatedAt": "2026-08-01T05:38:13.172Z",
+    "history": [
+      {
+        "at": "2026-07-24T20:27:04.512Z",
+        "actor": "Leila Haddad",
+        "type": "status",
+        "from": null,
+        "to": "Submitted"
+      },
+      {
+        "at": "2026-07-27T21:50:59.229Z",
+        "actor": "Jordan Kim (PM)",
+        "type": "status",
+        "from": "Submitted",
+        "to": "In Review"
+      },
+      {
+        "at": "2026-08-01T05:38:13.172Z",
+        "actor": "Jordan Kim (PM)",
+        "type": "status",
+        "from": "In Review",
+        "to": "Needs Info"
+      }
+    ],
+    "comments": [
+      {
+        "at": "2026-07-27T21:50:59.229Z",
+        "author": "Jordan Kim (PM)",
+        "text": "Picking this up for review."
+      },
+      {
+        "at": "2026-08-01T05:38:13.172Z",
+        "author": "Jordan Kim (PM)",
+        "text": "Can you share how many records this affects per month and which teams own the process today?"
+      }
+    ]
+  },
+  {
+    "id": "FR-2026-0021",
+    "requesterName": "Aiko Tanaka",
+    "title": "Automate new-hire laptop provisioning (North America)",
+    "problem": "IT learns about new hires from a manager email, sometimes after the start date. 1 in 5 new hires starts without a working laptop.",
+    "proposedSolution": "Trigger a ServiceNow provisioning ticket when an offer is accepted in Workday.",
+    "businessValue": "Every new hire productive on day one; fewer escalations to IT leadership.",
+    "successMetrics": "98% of new hires have equipment on day one.",
+    "urgencyReason": "",
+    "requesterEmail": "aiko.tanaka@example.com",
+    "department": "Marketing",
+    "category": "Automation",
+    "usersAffected": "11-50",
+    "revenueImpact": "Very High (> $1M)",
+    "urgency": "Low",
+    "affectedSystems": [
+      "Workday",
+      "ServiceNow",
+      "Internal Tools"
+    ],
+    "regulatory": false,
+    "targetDate": "2026-08-28",
+    "status": "In Review",
+    "priorityScore": 49,
+    "priorityBand": "P3",
+    "assignee": "Casey Morgan (BA)",
+    "jiraKey": "",
+    "createdAt": "2026-07-27T17:54:27.983Z",
+    "updatedAt": "2026-07-31T21:40:58.991Z",
+    "history": [
+      {
+        "at": "2026-07-27T17:54:27.983Z",
+        "actor": "Aiko Tanaka",
+        "type": "status",
+        "from": null,
+        "to": "Submitted"
+      },
+      {
+        "at": "2026-07-31T21:40:58.991Z",
+        "actor": "Casey Morgan (BA)",
+        "type": "status",
+        "from": "Submitted",
+        "to": "In Review"
+      }
+    ],
+    "comments": [
+      {
+        "at": "2026-07-31T21:40:58.991Z",
+        "author": "Casey Morgan (BA)",
+        "text": "Picking this up for review."
+      }
+    ]
+  },
+  {
+    "id": "FR-2026-0022",
+    "requesterName": "Diego Alvarez",
+    "title": "Mobile app: save items to wishlist (phase 2)",
+    "problem": "Customers cannot save products to come back to later on mobile, so they screenshot them or abandon the session.",
+    "proposedSolution": "Heart icon on product cards synced to the customer account.",
+    "businessValue": "Wishlists lift return-visit conversion by 3-5% in industry benchmarks.",
+    "successMetrics": "Return-visit conversion up 3% in 90 days.",
+    "urgencyReason": "",
+    "requesterEmail": "diego.alvarez@example.com",
+    "department": "Operations",
+    "category": "New Feature",
+    "usersAffected": "251-1000",
+    "revenueImpact": "High ($250K-$1M)",
+    "urgency": "High",
+    "affectedSystems": [
+      "Mobile App"
+    ],
+    "regulatory": false,
+    "targetDate": "2026-11-23",
+    "status": "Approved",
+    "priorityScore": 76,
+    "priorityBand": "P1",
+    "assignee": "Casey Morgan (BA)",
+    "jiraKey": "FEAT-121",
+    "createdAt": "2026-07-31T02:12:30.136Z",
+    "updatedAt": "2026-08-03T15:21:29.560Z",
+    "history": [
+      {
+        "at": "2026-07-31T02:12:30.136Z",
+        "actor": "Diego Alvarez",
+        "type": "status",
+        "from": null,
+        "to": "Submitted"
+      },
+      {
+        "at": "2026-08-01T08:50:29.642Z",
+        "actor": "Casey Morgan (BA)",
+        "type": "status",
+        "from": "Submitted",
+        "to": "In Review"
+      },
+      {
+        "at": "2026-08-03T15:21:29.560Z",
+        "actor": "Casey Morgan (BA)",
+        "type": "status",
+        "from": "In Review",
+        "to": "Approved"
+      }
+    ],
+    "comments": [
+      {
+        "at": "2026-08-01T08:50:29.642Z",
+        "author": "Casey Morgan (BA)",
+        "text": "Picking this up for review."
+      },
+      {
+        "at": "2026-08-03T15:21:29.560Z",
+        "author": "Casey Morgan (BA)",
+        "text": "Approved at weekly triage. Sizing with the delivery team next sprint."
+      }
+    ]
+  },
+  {
+    "id": "FR-2026-0023",
+    "requesterName": "Owen Murphy",
+    "title": "Commission statements in the sales portal (phase 2)",
+    "problem": "Reps email finance monthly to ask how their commission was calculated, creating ~300 inquiries per cycle.",
+    "proposedSolution": "Line-item commission breakdown visible to each rep.",
+    "businessValue": "Reduces finance inquiries and disputes; improves rep trust in comp plan.",
+    "successMetrics": "Commission inquiries down 70%.",
+    "urgencyReason": "",
+    "requesterEmail": "owen.murphy@example.com",
+    "department": "Sales",
+    "category": "Enhancement",
+    "usersAffected": "51-250",
+    "revenueImpact": "Medium ($50K-$250K)",
+    "urgency": "High",
+    "affectedSystems": [
+      "Salesforce",
+      "Internal Tools"
+    ],
+    "regulatory": false,
+    "targetDate": "",
+    "status": "Done",
+    "priorityScore": 62,
+    "priorityBand": "P2",
+    "assignee": "Jordan Kim (PM)",
+    "jiraKey": "FEAT-122",
+    "createdAt": "2026-08-02T09:07:07.927Z",
+    "updatedAt": "2026-08-17T04:47:55.055Z",
+    "history": [
+      {
+        "at": "2026-08-02T09:07:07.927Z",
+        "actor": "Owen Murphy",
+        "type": "status",
+        "from": null,
+        "to": "Submitted"
+      },
+      {
+        "at": "2026-08-03T13:50:04.850Z",
+        "actor": "Jordan Kim (PM)",
+        "type": "status",
+        "from": "Submitted",
+        "to": "In Review"
+      },
+      {
+        "at": "2026-08-07T21:44:26.807Z",
+        "actor": "Jordan Kim (PM)",
+        "type": "status",
+        "from": "In Review",
+        "to": "Approved"
+      },
+      {
+        "at": "2026-08-11T23:05:20.684Z",
+        "actor": "Jordan Kim (PM)",
+        "type": "status",
+        "from": "Approved",
+        "to": "In Delivery"
+      },
+      {
+        "at": "2026-08-17T04:47:55.055Z",
+        "actor": "Jordan Kim (PM)",
+        "type": "status",
+        "from": "In Delivery",
+        "to": "Done"
+      }
+    ],
+    "comments": [
+      {
+        "at": "2026-08-03T13:50:04.850Z",
+        "author": "Jordan Kim (PM)",
+        "text": "Picking this up for review."
+      },
+      {
+        "at": "2026-08-07T21:44:26.807Z",
+        "author": "Jordan Kim (PM)",
+        "text": "Approved at weekly triage. Sizing with the delivery team next sprint."
+      }
+    ]
+  },
+  {
+    "id": "FR-2026-0024",
+    "requesterName": "Leila Haddad",
+    "title": "GDPR data-subject request workflow (phase 2)",
+    "problem": "Data-subject access and deletion requests arrive by email and are tracked in a spreadsheet. We have 30 days to respond and missed two deadlines last year.",
+    "proposedSolution": "Portal form that opens a tracked case with SLA timers and a checklist per system.",
+    "businessValue": "Avoids regulatory fines (up to 4% of turnover) and reputational damage.",
+    "successMetrics": "100% of DSARs answered within 30 days.",
+    "urgencyReason": "Committed to a customer or auditor date; slipping has contractual consequences.",
+    "requesterEmail": "leila.haddad@example.com",
+    "department": "Finance",
+    "category": "Compliance / Regulatory",
+    "usersAffected": "11-50",
+    "revenueImpact": "Very High (> $1M)",
+    "urgency": "Critical",
+    "affectedSystems": [
+      "Customer Portal",
+      "ServiceNow",
+      "Data Warehouse"
+    ],
+    "regulatory": true,
+    "targetDate": "2026-09-10",
+    "status": "In Review",
+    "priorityScore": 94,
+    "priorityBand": "P1",
+    "assignee": "Jordan Kim (PM)",
+    "jiraKey": "",
+    "createdAt": "2026-08-05T11:21:23.351Z",
+    "updatedAt": "2026-08-07T18:49:05.003Z",
+    "history": [
+      {
+        "at": "2026-08-05T11:21:23.351Z",
+        "actor": "Leila Haddad",
+        "type": "status",
+        "from": null,
+        "to": "Submitted"
+      },
+      {
+        "at": "2026-08-07T18:49:05.003Z",
+        "actor": "Jordan Kim (PM)",
+        "type": "status",
+        "from": "Submitted",
+        "to": "In Review"
+      }
+    ],
+    "comments": [
+      {
+        "at": "2026-08-07T18:49:05.003Z",
+        "author": "Jordan Kim (PM)",
+        "text": "Picking this up for review."
+      }
+    ]
+  },
+  {
+    "id": "FR-2026-0025",
+    "requesterName": "Tomás Silva",
+    "title": "Marketing campaign ROI report (APAC)",
+    "problem": "Marketing cannot tie pipeline back to campaigns because campaign IDs are lost when leads convert.",
+    "proposedSolution": "Preserve campaign attribution through lead conversion and expose it in a dashboard.",
+    "businessValue": "Lets us reallocate ~$2M annual spend toward campaigns that actually produce pipeline.",
+    "successMetrics": "Attribution available for 95% of opportunities.",
+    "urgencyReason": "Committed to a customer or auditor date; slipping has contractual consequences.",
+    "requesterEmail": "tomas.silva@example.com",
+    "department": "HR",
+    "category": "Reporting & Analytics",
+    "usersAffected": "1000+",
+    "revenueImpact": "High ($250K-$1M)",
+    "urgency": "Critical",
+    "affectedSystems": [
+      "Salesforce",
+      "Data Warehouse"
+    ],
+    "regulatory": false,
+    "targetDate": "2026-11-16",
+    "status": "Approved",
+    "priorityScore": 93,
+    "priorityBand": "P1",
+    "assignee": "Alex Rivera (PM)",
+    "jiraKey": "FEAT-124",
+    "createdAt": "2026-08-08T05:33:20.306Z",
+    "updatedAt": "2026-08-13T16:53:56.386Z",
+    "history": [
+      {
+        "at": "2026-08-08T05:33:20.306Z",
+        "actor": "Tomás Silva",
+        "type": "status",
+        "from": null,
+        "to": "Submitted"
+      },
+      {
+        "at": "2026-08-10T12:54:26.082Z",
+        "actor": "Alex Rivera (PM)",
+        "type": "status",
+        "from": "Submitted",
+        "to": "In Review"
+      },
+      {
+        "at": "2026-08-13T16:53:56.386Z",
+        "actor": "Alex Rivera (PM)",
+        "type": "status",
+        "from": "In Review",
+        "to": "Approved"
+      }
+    ],
+    "comments": [
+      {
+        "at": "2026-08-10T12:54:26.082Z",
+        "author": "Alex Rivera (PM)",
+        "text": "Picking this up for review."
+      },
+      {
+        "at": "2026-08-13T16:53:56.386Z",
+        "author": "Alex Rivera (PM)",
+        "text": "Approved at weekly triage. Sizing with the delivery team next sprint."
+      }
+    ]
+  },
+  {
+    "id": "FR-2026-0026",
+    "requesterName": "Tomás Silva",
+    "title": "Expense receipt capture by photo (APAC)",
+    "problem": "Employees keep paper receipts and upload scans at month end; many are lost, delaying reimbursement.",
+    "proposedSolution": "Snap a photo in the mobile app and auto-extract amount, date and merchant.",
+    "businessValue": "Faster reimbursements and fewer policy exceptions for missing receipts.",
+    "successMetrics": "",
+    "urgencyReason": "Committed to a customer or auditor date; slipping has contractual consequences.",
+    "requesterEmail": "tomas.silva@example.com",
+    "department": "HR",
+    "category": "New Feature",
+    "usersAffected": "51-250",
+    "revenueImpact": "High ($250K-$1M)",
+    "urgency": "Critical",
+    "affectedSystems": [
+      "Mobile App",
+      "SAP"
+    ],
+    "regulatory": false,
+    "targetDate": "2026-09-06",
+    "status": "Submitted",
+    "priorityScore": 79,
+    "priorityBand": "P1",
+    "assignee": "",
+    "jiraKey": "",
+    "createdAt": "2026-08-11T10:00:05.180Z",
+    "updatedAt": "2026-08-11T10:00:05.180Z",
+    "history": [
+      {
+        "at": "2026-08-11T10:00:05.180Z",
+        "actor": "Tomás Silva",
+        "type": "status",
+        "from": null,
+        "to": "Submitted"
+      }
+    ],
+    "comments": []
+  },
+  {
+    "id": "FR-2026-0027",
+    "requesterName": "Priya Raman",
+    "title": "Warehouse pick-list optimisation (EMEA)",
+    "problem": "Pick lists are sorted by order number rather than bin location, so pickers walk the warehouse several times per batch.",
+    "proposedSolution": "Sort pick lists by walking route.",
+    "businessValue": "Estimated 15% pick-time reduction across 3 warehouses.",
+    "successMetrics": "Average lines picked per hour up 15%.",
+    "urgencyReason": "",
+    "requesterEmail": "priya.raman@example.com",
+    "department": "Finance",
+    "category": "Enhancement",
+    "usersAffected": "11-50",
+    "revenueImpact": "Very High (> $1M)",
+    "urgency": "Medium",
+    "affectedSystems": [
+      "SAP",
+      "Internal Tools"
+    ],
+    "regulatory": false,
+    "targetDate": "2026-12-31",
+    "status": "In Review",
+    "priorityScore": 59,
+    "priorityBand": "P2",
+    "assignee": "Jordan Kim (PM)",
+    "jiraKey": "",
+    "createdAt": "2026-08-13T15:33:34.776Z",
+    "updatedAt": "2026-08-16T16:42:45.016Z",
+    "history": [
+      {
+        "at": "2026-08-13T15:33:34.776Z",
+        "actor": "Priya Raman",
+        "type": "status",
+        "from": null,
+        "to": "Submitted"
+      },
+      {
+        "at": "2026-08-16T16:42:45.016Z",
+        "actor": "Jordan Kim (PM)",
+        "type": "status",
+        "from": "Submitted",
+        "to": "In Review"
+      }
+    ],
+    "comments": [
+      {
+        "at": "2026-08-16T16:42:45.016Z",
+        "author": "Jordan Kim (PM)",
+        "text": "Picking this up for review."
+      }
+    ]
+  },
+  {
+    "id": "FR-2026-0028",
+    "requesterName": "Grace Liu",
+    "title": "Slack alerts for P1 support tickets (EMEA)",
+    "problem": "On-call engineers miss P1 tickets overnight because email alerts are filtered or delayed.",
+    "proposedSolution": "",
+    "businessValue": "Faster response on the incidents that cost us most; protects enterprise SLAs.",
+    "successMetrics": "P1 acknowledgement under 10 minutes.",
+    "urgencyReason": "",
+    "requesterEmail": "grace.liu@example.com",
+    "department": "Legal & Compliance",
+    "category": "Integration",
+    "usersAffected": "251-1000",
+    "revenueImpact": "Medium ($50K-$250K)",
+    "urgency": "High",
+    "affectedSystems": [
+      "ServiceNow",
+      "Internal Tools"
+    ],
+    "regulatory": false,
+    "targetDate": "2026-10-21",
+    "status": "In Delivery",
+    "priorityScore": 69,
+    "priorityBand": "P2",
+    "assignee": "Jordan Kim (PM)",
+    "jiraKey": "FEAT-127",
+    "createdAt": "2026-08-16T13:26:12.782Z",
+    "updatedAt": "2026-08-26T01:29:49.694Z",
+    "history": [
+      {
+        "at": "2026-08-16T13:26:12.782Z",
+        "actor": "Grace Liu",
+        "type": "status",
+        "from": null,
+        "to": "Submitted"
+      },
+      {
+        "at": "2026-08-18T19:26:45.517Z",
+        "actor": "Jordan Kim (PM)",
+        "type": "status",
+        "from": "Submitted",
+        "to": "In Review"
+      },
+      {
+        "at": "2026-08-23T23:14:27.706Z",
+        "actor": "Jordan Kim (PM)",
+        "type": "status",
+        "from": "In Review",
+        "to": "Approved"
+      },
+      {
+        "at": "2026-08-26T01:29:49.694Z",
+        "actor": "Jordan Kim (PM)",
+        "type": "status",
+        "from": "Approved",
+        "to": "In Delivery"
+      }
+    ],
+    "comments": [
+      {
+        "at": "2026-08-18T19:26:45.517Z",
+        "author": "Jordan Kim (PM)",
+        "text": "Picking this up for review."
+      },
+      {
+        "at": "2026-08-23T23:14:27.706Z",
+        "author": "Jordan Kim (PM)",
+        "text": "Approved at weekly triage. Sizing with the delivery team next sprint."
+      }
+    ]
+  },
+  {
+    "id": "FR-2026-0029",
+    "requesterName": "Leila Haddad",
+    "title": "Contract renewal reminders (APAC)",
+    "problem": "Legal and sales lose track of auto-renewal notice windows; last year we auto-renewed two vendor contracts we meant to cancel.",
+    "proposedSolution": "Reminders 90/60/30 days before notice deadlines.",
+    "businessValue": "Avoids ~$180K a year in unwanted renewals.",
+    "successMetrics": "Zero unintended renewals.",
+    "urgencyReason": "",
+    "requesterEmail": "leila.haddad@example.com",
+    "department": "Finance",
+    "category": "Automation",
+    "usersAffected": "1-10",
+    "revenueImpact": "Medium ($50K-$250K)",
+    "urgency": "Medium",
+    "affectedSystems": [
+      "Salesforce"
+    ],
+    "regulatory": false,
+    "targetDate": "",
+    "status": "Submitted",
+    "priorityScore": 38,
+    "priorityBand": "P3",
+    "assignee": "",
+    "jiraKey": "",
+    "createdAt": "2026-08-19T05:40:11.610Z",
+    "updatedAt": "2026-08-19T05:40:11.610Z",
+    "history": [
+      {
+        "at": "2026-08-19T05:40:11.610Z",
+        "actor": "Leila Haddad",
+        "type": "status",
+        "from": null,
+        "to": "Submitted"
+      }
+    ],
+    "comments": []
+  },
+  {
+    "id": "FR-2026-0030",
+    "requesterName": "Leila Haddad",
+    "title": "Accessibility fixes for checkout (phase 2)",
+    "problem": "An external audit found WCAG 2.1 AA failures in checkout: unlabeled fields and keyboard traps.",
+    "proposedSolution": "Remediate audit findings and add automated accessibility tests to CI.",
+    "businessValue": "Reduces legal exposure and opens checkout to customers using assistive technology.",
+    "successMetrics": "Zero critical findings on re-audit.",
+    "urgencyReason": "",
+    "requesterEmail": "leila.haddad@example.com",
+    "department": "Finance",
+    "category": "Compliance / Regulatory",
+    "usersAffected": "251-1000",
+    "revenueImpact": "Low (< $50K)",
+    "urgency": "High",
+    "affectedSystems": [
+      "Customer Portal",
+      "Mobile App"
+    ],
+    "regulatory": true,
+    "targetDate": "2026-11-23",
+    "status": "In Review",
+    "priorityScore": 77,
+    "priorityBand": "P1",
+    "assignee": "Jordan Kim (PM)",
+    "jiraKey": "",
+    "createdAt": "2026-08-22T11:28:49.264Z",
+    "updatedAt": "2026-08-26T15:14:54.706Z",
+    "history": [
+      {
+        "at": "2026-08-22T11:28:49.264Z",
+        "actor": "Leila Haddad",
+        "type": "status",
+        "from": null,
+        "to": "Submitted"
+      },
+      {
+        "at": "2026-08-26T15:14:54.706Z",
+        "actor": "Jordan Kim (PM)",
+        "type": "status",
+        "from": "Submitted",
+        "to": "In Review"
+      }
+    ],
+    "comments": [
+      {
+        "at": "2026-08-26T15:14:54.706Z",
+        "author": "Jordan Kim (PM)",
+        "text": "Picking this up for review."
+      }
+    ]
+  },
+  {
+    "id": "FR-2026-0031",
+    "requesterName": "Sam Patel",
+    "title": "Auto-sync closed-won deals to invoicing (EMEA)",
+    "problem": "When a deal closes in Salesforce, finance re-keys the order into SAP by hand. It takes 2-3 days and about 4% of invoices have typos in amounts or PO numbers.",
+    "proposedSolution": "Push closed-won opportunities to SAP as draft sales orders automatically, with a review queue for exceptions.",
+    "businessValue": "Removes ~120 hours/month of manual entry and shortens days-sales-outstanding by an estimated 2 days.",
+    "successMetrics": "Invoice creation within 4 hours of close; re-key error rate below 0.5%.",
+    "urgencyReason": "",
+    "requesterEmail": "sam.patel@example.com",
+    "department": "IT",
+    "category": "Integration",
+    "usersAffected": "251-1000",
+    "revenueImpact": "High ($250K-$1M)",
+    "urgency": "Low",
+    "affectedSystems": [
+      "Salesforce",
+      "SAP"
+    ],
+    "regulatory": false,
+    "targetDate": "",
+    "status": "In Delivery",
+    "priorityScore": 56,
+    "priorityBand": "P2",
+    "assignee": "Alex Rivera (PM)",
+    "jiraKey": "FEAT-130",
+    "createdAt": "2026-08-25T08:48:11.405Z",
+    "updatedAt": "2026-09-04T17:10:00.931Z",
+    "history": [
+      {
+        "at": "2026-08-25T08:48:11.405Z",
+        "actor": "Sam Patel",
+        "type": "status",
+        "from": null,
+        "to": "Submitted"
+      },
+      {
+        "at": "2026-08-29T09:30:39.328Z",
+        "actor": "Alex Rivera (PM)",
+        "type": "status",
+        "from": "Submitted",
+        "to": "In Review"
+      },
+      {
+        "at": "2026-08-30T15:43:24.448Z",
+        "actor": "Alex Rivera (PM)",
+        "type": "status",
+        "from": "In Review",
+        "to": "Approved"
+      },
+      {
+        "at": "2026-09-04T17:10:00.931Z",
+        "actor": "Alex Rivera (PM)",
+        "type": "status",
+        "from": "Approved",
+        "to": "In Delivery"
+      }
+    ],
+    "comments": [
+      {
+        "at": "2026-08-29T09:30:39.328Z",
+        "author": "Alex Rivera (PM)",
+        "text": "Picking this up for review."
+      },
+      {
+        "at": "2026-08-30T15:43:24.448Z",
+        "author": "Alex Rivera (PM)",
+        "text": "Approved at weekly triage. Sizing with the delivery team next sprint."
+      }
+    ]
+  },
+  {
+    "id": "FR-2026-0032",
+    "requesterName": "Aiko Tanaka",
+    "title": "Self-service password reset for customer portal (North America)",
+    "problem": "Customers who forget their portal password must call support. Password resets are 18% of all tier-1 tickets.",
+    "proposedSolution": "Email-based reset link with MFA confirmation.",
+    "businessValue": "Deflects ~1,100 tickets per month and improves CSAT for login issues.",
+    "successMetrics": "Password-related tickets down 80% within one quarter.",
+    "urgencyReason": "",
+    "requesterEmail": "aiko.tanaka@example.com",
+    "department": "Marketing",
+    "category": "New Feature",
+    "usersAffected": "1000+",
+    "revenueImpact": "Medium ($50K-$250K)",
+    "urgency": "High",
+    "affectedSystems": [
+      "Customer Portal"
+    ],
+    "regulatory": false,
+    "targetDate": "",
+    "status": "Approved",
+    "priorityScore": 76,
+    "priorityBand": "P1",
+    "assignee": "Jordan Kim (PM)",
+    "jiraKey": "FEAT-131",
+    "createdAt": "2026-08-27T20:02:07.742Z",
+    "updatedAt": "2026-09-05T13:47:10.805Z",
+    "history": [
+      {
+        "at": "2026-08-27T20:02:07.742Z",
+        "actor": "Aiko Tanaka",
+        "type": "status",
+        "from": null,
+        "to": "Submitted"
+      },
+      {
+        "at": "2026-08-28T22:50:18.471Z",
+        "actor": "Jordan Kim (PM)",
+        "type": "status",
+        "from": "Submitted",
+        "to": "In Review"
+      },
+      {
+        "at": "2026-08-30T06:43:02.273Z",
+        "actor": "Jordan Kim (PM)",
+        "type": "status",
+        "from": "In Review",
+        "to": "Needs Info"
+      },
+      {
+        "at": "2026-09-03T11:42:39.035Z",
+        "actor": "Jordan Kim (PM)",
+        "type": "status",
+        "from": "Needs Info",
+        "to": "In Review"
+      },
+      {
+        "at": "2026-09-05T13:47:10.805Z",
+        "actor": "Jordan Kim (PM)",
+        "type": "status",
+        "from": "In Review",
+        "to": "Approved"
+      }
+    ],
+    "comments": [
+      {
+        "at": "2026-08-28T22:50:18.471Z",
+        "author": "Jordan Kim (PM)",
+        "text": "Picking this up for review."
+      },
+      {
+        "at": "2026-08-30T06:43:02.273Z",
+        "author": "Jordan Kim (PM)",
+        "text": "Can you share how many records this affects per month and which teams own the process today?"
+      },
+      {
+        "at": "2026-09-03T11:42:39.035Z",
+        "author": "Jordan Kim (PM)",
+        "text": "Picking this up for review."
+      },
+      {
+        "at": "2026-09-03T11:42:39.035Z",
+        "author": "Aiko Tanaka",
+        "text": "Roughly 2,000 records a month; the Operations team owns it today."
+      },
+      {
+        "at": "2026-09-05T13:47:10.805Z",
+        "author": "Jordan Kim (PM)",
+        "text": "Approved at weekly triage. Sizing with the delivery team next sprint."
+      }
+    ]
+  },
+  {
+    "id": "FR-2026-0033",
+    "requesterName": "Noah Fischer",
+    "title": "Quarterly SOX access review report (phase 2)",
+    "problem": "Auditors need a list of who has access to financial systems each quarter. Today IT stitches it together from three exports in spreadsheets.",
+    "proposedSolution": "Scheduled report joining Workday org data with SAP role assignments.",
+    "businessValue": "Avoids audit findings and saves ~40 hours per quarter of IT and compliance time.",
+    "successMetrics": "Report produced automatically by day 3 of each quarter with zero manual edits.",
+    "urgencyReason": "",
+    "requesterEmail": "noah.fischer@example.com",
+    "department": "Product",
+    "category": "Compliance / Regulatory",
+    "usersAffected": "51-250",
+    "revenueImpact": "High ($250K-$1M)",
+    "urgency": "Medium",
+    "affectedSystems": [
+      "Workday",
+      "SAP",
+      "Data Warehouse"
+    ],
+    "regulatory": true,
+    "targetDate": "2026-10-30",
+    "status": "Rejected",
+    "priorityScore": 74,
+    "priorityBand": "P2",
+    "assignee": "Jordan Kim (PM)",
+    "jiraKey": "",
+    "createdAt": "2026-08-30T20:17:13.511Z",
+    "updatedAt": "2026-09-06T01:57:33.142Z",
+    "history": [
+      {
+        "at": "2026-08-30T20:17:13.511Z",
+        "actor": "Noah Fischer",
+        "type": "status",
+        "from": null,
+        "to": "Submitted"
+      },
+      {
+        "at": "2026-08-31T21:31:16.111Z",
+        "actor": "Jordan Kim (PM)",
+        "type": "status",
+        "from": "Submitted",
+        "to": "In Review"
+      },
+      {
+        "at": "2026-09-06T01:57:33.142Z",
+        "actor": "Jordan Kim (PM)",
+        "type": "status",
+        "from": "In Review",
+        "to": "Rejected"
+      }
+    ],
+    "comments": [
+      {
+        "at": "2026-08-31T21:31:16.111Z",
+        "author": "Jordan Kim (PM)",
+        "text": "Picking this up for review."
+      },
+      {
+        "at": "2026-09-06T01:57:33.142Z",
+        "author": "Jordan Kim (PM)",
+        "text": "Duplicate of an item already on the roadmap for next quarter. Linking and closing."
+      }
+    ]
+  },
+  {
+    "id": "FR-2026-0034",
+    "requesterName": "Owen Murphy",
+    "title": "Bulk edit for support ticket tags (North America)",
+    "problem": "Support leads re-tag hundreds of tickets after taxonomy changes, one at a time.",
+    "proposedSolution": "",
+    "businessValue": "Saves team leads about 6 hours a week and keeps reporting categories accurate.",
+    "successMetrics": "",
+    "urgencyReason": "",
+    "requesterEmail": "owen.murphy@example.com",
+    "department": "Sales",
+    "category": "Enhancement",
+    "usersAffected": "1-10",
+    "revenueImpact": "None",
+    "urgency": "Low",
+    "affectedSystems": [
+      "ServiceNow"
+    ],
+    "regulatory": false,
+    "targetDate": "2026-11-14",
+    "status": "Submitted",
+    "priorityScore": 14,
+    "priorityBand": "P4",
+    "assignee": "",
+    "jiraKey": "",
+    "createdAt": "2026-09-02T20:45:55.353Z",
+    "updatedAt": "2026-09-02T20:45:55.353Z",
+    "history": [
+      {
+        "at": "2026-09-02T20:45:55.353Z",
+        "actor": "Owen Murphy",
+        "type": "status",
+        "from": null,
+        "to": "Submitted"
+      }
+    ],
+    "comments": []
+  },
+  {
+    "id": "FR-2026-0035",
+    "requesterName": "Leila Haddad",
+    "title": "Churn-risk dashboard for account managers (North America)",
+    "problem": "Account managers only learn a customer is unhappy when they fail to renew. Usage and ticket signals exist but are scattered.",
+    "proposedSolution": "Weekly churn-risk score per account surfaced in Salesforce.",
+    "businessValue": "A 1-point reduction in gross churn is worth about $900K ARR.",
+    "successMetrics": "Gross churn down 1 point year over year; 90% of at-risk accounts contacted within 14 days.",
+    "urgencyReason": "",
+    "requesterEmail": "leila.haddad@example.com",
+    "department": "Finance",
+    "category": "Reporting & Analytics",
+    "usersAffected": "1-10",
+    "revenueImpact": "Low (< $50K)",
+    "urgency": "Low",
+    "affectedSystems": [
+      "Data Warehouse",
+      "Salesforce"
+    ],
+    "regulatory": false,
+    "targetDate": "2026-12-23",
+    "status": "In Review",
+    "priorityScore": 21,
+    "priorityBand": "P4",
+    "assignee": "Taylor Brooks (PM)",
+    "jiraKey": "",
+    "createdAt": "2026-09-05T23:52:16.837Z",
+    "updatedAt": "2026-09-08T04:00:47.684Z",
+    "history": [
+      {
+        "at": "2026-09-05T23:52:16.837Z",
+        "actor": "Leila Haddad",
+        "type": "status",
+        "from": null,
+        "to": "Submitted"
+      },
+      {
+        "at": "2026-09-08T04:00:47.684Z",
+        "actor": "Taylor Brooks (PM)",
+        "type": "status",
+        "from": "Submitted",
+        "to": "In Review"
+      }
+    ],
+    "comments": [
+      {
+        "at": "2026-09-08T04:00:47.684Z",
+        "author": "Taylor Brooks (PM)",
+        "text": "Picking this up for review."
+      }
+    ]
+  },
+  {
+    "id": "FR-2026-0036",
+    "requesterName": "Noah Fischer",
+    "title": "Automate new-hire laptop provisioning (phase 2)",
+    "problem": "IT learns about new hires from a manager email, sometimes after the start date. 1 in 5 new hires starts without a working laptop.",
+    "proposedSolution": "Trigger a ServiceNow provisioning ticket when an offer is accepted in Workday.",
+    "businessValue": "Every new hire productive on day one; fewer escalations to IT leadership.",
+    "successMetrics": "98% of new hires have equipment on day one.",
+    "urgencyReason": "",
+    "requesterEmail": "noah.fischer@example.com",
+    "department": "Product",
+    "category": "Automation",
+    "usersAffected": "11-50",
+    "revenueImpact": "None",
+    "urgency": "High",
+    "affectedSystems": [
+      "Workday",
+      "ServiceNow",
+      "Internal Tools"
+    ],
+    "regulatory": false,
+    "targetDate": "2026-11-28",
+    "status": "Approved",
+    "priorityScore": 41,
+    "priorityBand": "P3",
+    "assignee": "Casey Morgan (BA)",
+    "jiraKey": "FEAT-135",
+    "createdAt": "2026-09-08T09:03:31.677Z",
+    "updatedAt": "2026-09-15T00:01:18.286Z",
+    "history": [
+      {
+        "at": "2026-09-08T09:03:31.677Z",
+        "actor": "Noah Fischer",
+        "type": "status",
+        "from": null,
+        "to": "Submitted"
+      },
+      {
+        "at": "2026-09-10T16:26:43.263Z",
+        "actor": "Casey Morgan (BA)",
+        "type": "status",
+        "from": "Submitted",
+        "to": "In Review"
+      },
+      {
+        "at": "2026-09-15T00:01:18.286Z",
+        "actor": "Casey Morgan (BA)",
+        "type": "status",
+        "from": "In Review",
+        "to": "Approved"
+      }
+    ],
+    "comments": [
+      {
+        "at": "2026-09-10T16:26:43.263Z",
+        "author": "Casey Morgan (BA)",
+        "text": "Picking this up for review."
+      },
+      {
+        "at": "2026-09-15T00:01:18.286Z",
+        "author": "Casey Morgan (BA)",
+        "text": "Approved at weekly triage. Sizing with the delivery team next sprint."
+      }
+    ]
+  },
+  {
+    "id": "FR-2026-0037",
+    "requesterName": "Sam Patel",
+    "title": "Mobile app: save items to wishlist (phase 2)",
+    "problem": "Customers cannot save products to come back to later on mobile, so they screenshot them or abandon the session.",
+    "proposedSolution": "Heart icon on product cards synced to the customer account.",
+    "businessValue": "Wishlists lift return-visit conversion by 3-5% in industry benchmarks.",
+    "successMetrics": "Return-visit conversion up 3% in 90 days.",
+    "urgencyReason": "",
+    "requesterEmail": "sam.patel@example.com",
+    "department": "IT",
+    "category": "New Feature",
+    "usersAffected": "251-1000",
+    "revenueImpact": "None",
+    "urgency": "Medium",
+    "affectedSystems": [
+      "Mobile App"
+    ],
+    "regulatory": false,
+    "targetDate": "",
+    "status": "Done",
+    "priorityScore": 45,
+    "priorityBand": "P3",
+    "assignee": "Casey Morgan (BA)",
+    "jiraKey": "FEAT-136",
+    "createdAt": "2026-09-11T06:50:05.980Z",
+    "updatedAt": "2026-09-22T23:59:59.000Z",
+    "history": [
+      {
+        "at": "2026-09-11T06:50:05.980Z",
+        "actor": "Sam Patel",
+        "type": "status",
+        "from": null,
+        "to": "Submitted"
+      },
+      {
+        "at": "2026-09-14T12:11:27.831Z",
+        "actor": "Casey Morgan (BA)",
+        "type": "status",
+        "from": "Submitted",
+        "to": "In Review"
+      },
+      {
+        "at": "2026-09-16T18:50:47.637Z",
+        "actor": "Casey Morgan (BA)",
+        "type": "status",
+        "from": "In Review",
+        "to": "Approved"
+      },
+      {
+        "at": "2026-09-18T21:06:19.157Z",
+        "actor": "Casey Morgan (BA)",
+        "type": "status",
+        "from": "Approved",
+        "to": "In Delivery"
+      },
+      {
+        "at": "2026-09-22T23:59:59.000Z",
+        "actor": "Casey Morgan (BA)",
+        "type": "status",
+        "from": "In Delivery",
+        "to": "Done"
+      }
+    ],
+    "comments": [
+      {
+        "at": "2026-09-14T12:11:27.831Z",
+        "author": "Casey Morgan (BA)",
+        "text": "Picking this up for review."
+      },
+      {
+        "at": "2026-09-16T18:50:47.637Z",
+        "author": "Casey Morgan (BA)",
+        "text": "Approved at weekly triage. Sizing with the delivery team next sprint."
+      }
+    ]
+  },
+  {
+    "id": "FR-2026-0038",
+    "requesterName": "Sam Patel",
+    "title": "Commission statements in the sales portal (APAC)",
+    "problem": "Reps email finance monthly to ask how their commission was calculated, creating ~300 inquiries per cycle.",
+    "proposedSolution": "Line-item commission breakdown visible to each rep.",
+    "businessValue": "Reduces finance inquiries and disputes; improves rep trust in comp plan.",
+    "successMetrics": "Commission inquiries down 70%.",
+    "urgencyReason": "",
+    "requesterEmail": "sam.patel@example.com",
+    "department": "IT",
+    "category": "Enhancement",
+    "usersAffected": "1-10",
+    "revenueImpact": "High ($250K-$1M)",
+    "urgency": "Medium",
+    "affectedSystems": [
+      "Salesforce",
+      "Internal Tools"
+    ],
+    "regulatory": false,
+    "targetDate": "",
+    "status": "In Review",
+    "priorityScore": 45,
+    "priorityBand": "P3",
+    "assignee": "Taylor Brooks (PM)",
+    "jiraKey": "",
+    "createdAt": "2026-09-14T03:21:50.813Z",
+    "updatedAt": "2026-09-15T07:14:17.104Z",
+    "history": [
+      {
+        "at": "2026-09-14T03:21:50.813Z",
+        "actor": "Sam Patel",
+        "type": "status",
+        "from": null,
+        "to": "Submitted"
+      },
+      {
+        "at": "2026-09-15T07:14:17.104Z",
+        "actor": "Taylor Brooks (PM)",
+        "type": "status",
+        "from": "Submitted",
+        "to": "In Review"
+      }
+    ],
+    "comments": [
+      {
+        "at": "2026-09-15T07:14:17.104Z",
+        "author": "Taylor Brooks (PM)",
+        "text": "Picking this up for review."
+      }
+    ]
+  },
+  {
+    "id": "FR-2026-0039",
+    "requesterName": "Aiko Tanaka",
+    "title": "GDPR data-subject request workflow (North America)",
+    "problem": "Data-subject access and deletion requests arrive by email and are tracked in a spreadsheet. We have 30 days to respond and missed two deadlines last year.",
+    "proposedSolution": "Portal form that opens a tracked case with SLA timers and a checklist per system.",
+    "businessValue": "Avoids regulatory fines (up to 4% of turnover) and reputational damage.",
+    "successMetrics": "100% of DSARs answered within 30 days.",
+    "urgencyReason": "",
+    "requesterEmail": "aiko.tanaka@example.com",
+    "department": "Marketing",
+    "category": "Compliance / Regulatory",
+    "usersAffected": "251-1000",
+    "revenueImpact": "Medium ($50K-$250K)",
+    "urgency": "Medium",
+    "affectedSystems": [
+      "Customer Portal",
+      "ServiceNow",
+      "Data Warehouse"
+    ],
+    "regulatory": true,
+    "targetDate": "2027-02-10",
+    "status": "Approved",
+    "priorityScore": 74,
+    "priorityBand": "P2",
+    "assignee": "Taylor Brooks (PM)",
+    "jiraKey": "FEAT-138",
+    "createdAt": "2026-09-16T09:47:14.208Z",
+    "updatedAt": "2026-09-22T23:59:59.000Z",
+    "history": [
+      {
+        "at": "2026-09-16T09:47:14.208Z",
+        "actor": "Aiko Tanaka",
+        "type": "status",
+        "from": null,
+        "to": "Submitted"
+      },
+      {
+        "at": "2026-09-20T12:41:05.826Z",
+        "actor": "Taylor Brooks (PM)",
+        "type": "status",
+        "from": "Submitted",
+        "to": "In Review"
+      },
+      {
+        "at": "2026-09-21T16:17:35.169Z",
+        "actor": "Taylor Brooks (PM)",
+        "type": "status",
+        "from": "In Review",
+        "to": "Needs Info"
+      },
+      {
+        "at": "2026-09-22T23:59:59.000Z",
+        "actor": "Taylor Brooks (PM)",
+        "type": "status",
+        "from": "Needs Info",
+        "to": "In Review"
+      },
+      {
+        "at": "2026-09-22T23:59:59.000Z",
+        "actor": "Taylor Brooks (PM)",
+        "type": "status",
+        "from": "In Review",
+        "to": "Approved"
+      }
+    ],
+    "comments": [
+      {
+        "at": "2026-09-20T12:41:05.826Z",
+        "author": "Taylor Brooks (PM)",
+        "text": "Picking this up for review."
+      },
+      {
+        "at": "2026-09-21T16:17:35.169Z",
+        "author": "Taylor Brooks (PM)",
+        "text": "Can you share how many records this affects per month and which teams own the process today?"
+      },
+      {
+        "at": "2026-09-22T23:59:59.000Z",
+        "author": "Taylor Brooks (PM)",
+        "text": "Picking this up for review."
+      },
+      {
+        "at": "2026-09-22T23:59:59.000Z",
+        "author": "Aiko Tanaka",
+        "text": "Roughly 2,000 records a month; the Operations team owns it today."
+      },
+      {
+        "at": "2026-09-22T23:59:59.000Z",
+        "author": "Taylor Brooks (PM)",
+        "text": "Approved at weekly triage. Sizing with the delivery team next sprint."
+      }
+    ]
+  },
+  {
+    "id": "FR-2026-0040",
+    "requesterName": "Hannah Okafor",
+    "title": "Marketing campaign ROI report (APAC)",
+    "problem": "Marketing cannot tie pipeline back to campaigns because campaign IDs are lost when leads convert.",
+    "proposedSolution": "Preserve campaign attribution through lead conversion and expose it in a dashboard.",
+    "businessValue": "Lets us reallocate ~$2M annual spend toward campaigns that actually produce pipeline.",
+    "successMetrics": "Attribution available for 95% of opportunities.",
+    "urgencyReason": "",
+    "requesterEmail": "hannah.okafor@example.com",
+    "department": "Customer Support",
+    "category": "Reporting & Analytics",
+    "usersAffected": "1-10",
+    "revenueImpact": "Medium ($50K-$250K)",
+    "urgency": "Low",
+    "affectedSystems": [
+      "Salesforce",
+      "Data Warehouse"
+    ],
+    "regulatory": false,
+    "targetDate": "",
+    "status": "Approved",
+    "priorityScore": 28,
+    "priorityBand": "P4",
+    "assignee": "Alex Rivera (PM)",
+    "jiraKey": "FEAT-139",
+    "createdAt": "2026-09-19T10:12:32.164Z",
+    "updatedAt": "2026-09-22T23:59:59.000Z",
+    "history": [
+      {
+        "at": "2026-09-19T10:12:32.164Z",
+        "actor": "Hannah Okafor",
+        "type": "status",
+        "from": null,
+        "to": "Submitted"
+      },
+      {
+        "at": "2026-09-22T12:18:23.722Z",
+        "actor": "Alex Rivera (PM)",
+        "type": "status",
+        "from": "Submitted",
+        "to": "In Review"
+      },
+      {
+        "at": "2026-09-22T23:59:59.000Z",
+        "actor": "Alex Rivera (PM)",
+        "type": "status",
+        "from": "In Review",
+        "to": "Approved"
+      }
+    ],
+    "comments": [
+      {
+        "at": "2026-09-22T12:18:23.722Z",
+        "author": "Alex Rivera (PM)",
+        "text": "Picking this up for review."
+      },
+      {
+        "at": "2026-09-22T23:59:59.000Z",
+        "author": "Alex Rivera (PM)",
+        "text": "Approved at weekly triage. Sizing with the delivery team next sprint."
+      }
+    ]
+  }
+]

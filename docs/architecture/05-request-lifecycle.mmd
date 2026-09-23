@@ -1,0 +1,18 @@
+stateDiagram-v2
+  [*] --> Submitted
+  Submitted --> InReview: triage picks up
+  Submitted --> Rejected: out of scope / duplicate (note required)
+  InReview --> NeedsInfo: question for requester (note required)
+  NeedsInfo --> InReview: requester answers
+  InReview --> Approved
+  InReview --> Rejected: note required
+  NeedsInfo --> Rejected: no response in 10 business days
+  Approved --> InDelivery: Jira work started
+  Approved --> Rejected: deprioritised
+  InDelivery --> Done
+  Rejected --> InReview: reopened
+  Done --> [*]
+
+  InReview: In Review
+  NeedsInfo: Needs Info
+  InDelivery: In Delivery

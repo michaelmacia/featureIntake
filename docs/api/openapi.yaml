@@ -1,0 +1,276 @@
+openapi: 3.0.3
+info:
+  title: Feature Intake API
+  version: 0.1.0
+  description: |
+    REST API behind the Feature Intake form and Triage Board.
+    All request and response bodies are JSON unless noted. MVP has no authentication (see PRD, Phase 2: SSO).
+servers:
+  - url: http://localhost:3000
+    description: Local development
+tags:
+  - name: Requests
+  - name: Reference
+paths:
+  /api/health:
+    get:
+      tags: [Reference]
+      summary: Liveness check
+      responses:
+        '200':
+          description: Service is up
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: string, example: ok }
+                  requests: { type: integer, example: 40 }
+  /api/meta:
+    get:
+      tags: [Reference]
+      summary: Enumerations, workflow transitions and field limits
+      description: The UI uses the same rules module; this endpoint exposes it to other clients.
+      responses:
+        '200':
+          description: Reference data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  enums: { type: object, additionalProperties: { type: array, items: { type: string } } }
+                  transitions: { type: object, additionalProperties: { type: array, items: { $ref: '#/components/schemas/Status' } } }
+                  limits: { type: object }
+  /api/stats:
+    get:
+      tags: [Reference]
+      summary: Queue summary for KPI tiles
+      responses:
+        '200':
+          description: Counts
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total: { type: integer }
+                  open: { type: integer }
+                  byStatus: { type: object, additionalProperties: { type: integer } }
+                  openByPriority:
+                    type: object
+                    properties: { P1: { type: integer }, P2: { type: integer }, P3: { type: integer }, P4: { type: integer } }
+  /api/requests:
+    get:
+      tags: [Requests]
+      summary: List and filter requests
+      parameters:
+        - { name: status, in: query, schema: { type: string }, description: 'A status, or "open" for all non-terminal statuses' }
+        - { name: department, in: query, schema: { $ref: '#/components/schemas/Department' } }
+        - { name: priority, in: query, schema: { type: string, enum: [P1, P2, P3, P4] } }
+        - { name: q, in: query, schema: { type: string }, description: Case-insensitive search over id, title, problem, requester name/email, Jira key }
+        - name: sort
+          in: query
+          schema:
+            type: string
+            default: -createdAt
+            enum: [createdAt, -createdAt, updatedAt, -updatedAt, priorityScore, -priorityScore, targetDate, -targetDate, title, -title, status, -status]
+      responses:
+        '200':
+          description: Matching requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count: { type: integer }
+                  items: { type: array, items: { $ref: '#/components/schemas/FeatureRequest' } }
+    post:
+      tags: [Requests]
+      summary: Submit a new request
+      description: Server assigns id, status (Submitted), priority score/band, timestamps and history. Unknown fields are ignored.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/NewFeatureRequest' }
+            example:
+              requesterName: Priya Raman
+              requesterEmail: priya.raman@example.com
+              department: Finance
+              title: Auto-sync closed-won deals to invoicing
+              category: Integration
+              problem: Finance re-keys every closed deal from Salesforce into SAP by hand, which takes days and introduces errors.
+              businessValue: Saves about 120 hours per month and speeds up cash collection.
+              affectedSystems: [Salesforce, SAP]
+              usersAffected: 11-50
+              revenueImpact: Medium ($50K-$250K)
+              regulatory: false
+              urgency: High
+      responses:
+        '201':
+          description: Created
+          headers:
+            Location: { schema: { type: string }, description: URL of the new request }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/FeatureRequest' }
+        '400': { $ref: '#/components/responses/Error' }
+        '413': { $ref: '#/components/responses/Error' }
+        '415': { $ref: '#/components/responses/Error' }
+        '422': { $ref: '#/components/responses/ValidationError' }
+  /api/requests/export.csv:
+    get:
+      tags: [Requests]
+      summary: Export filtered requests as CSV
+      description: Accepts the same query parameters as the list endpoint. UTF-8 with BOM; formula-leading cells are prefixed with an apostrophe.
+      responses:
+        '200':
+          description: CSV file
+          content:
+            text/csv: { schema: { type: string } }
+  /api/requests/{id}:
+    parameters:
+      - { name: id, in: path, required: true, schema: { type: string, example: FR-2026-0001 } }
+    get:
+      tags: [Requests]
+      summary: Get one request
+      responses:
+        '200':
+          description: The request
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/FeatureRequest' }
+        '404': { $ref: '#/components/responses/Error' }
+    patch:
+      tags: [Requests]
+      summary: Triage update (status, assignee, Jira key, note)
+      description: |
+        Status changes must follow the workflow (see /api/meta transitions).
+        Moving to Rejected or Needs Info requires `note`. Every change is appended to `history`.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status: { $ref: '#/components/schemas/Status' }
+                assignee: { type: string, maxLength: 80 }
+                jiraKey: { type: string, pattern: '^[A-Z][A-Z0-9]+-\d+$', example: FEAT-123 }
+                note: { type: string, maxLength: 2000 }
+                actor: { type: string, description: Name recorded in history (replaced by SSO identity in Phase 2) }
+      responses:
+        '200':
+          description: Updated request
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/FeatureRequest' }
+        '404': { $ref: '#/components/responses/Error' }
+        '422': { $ref: '#/components/responses/ValidationError' }
+  /api/requests/{id}/comments:
+    parameters:
+      - { name: id, in: path, required: true, schema: { type: string } }
+    post:
+      tags: [Requests]
+      summary: Add a comment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [text]
+              properties:
+                text: { type: string, minLength: 1, maxLength: 2000 }
+                actor: { type: string }
+      responses:
+        '201':
+          description: Updated request including the new comment
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/FeatureRequest' }
+        '422': { $ref: '#/components/responses/ValidationError' }
+components:
+  responses:
+    Error:
+      description: Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error: { type: string }
+    ValidationError:
+      description: One or more fields failed validation
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error: { type: string, example: Validation failed. }
+              fields:
+                type: object
+                additionalProperties: { type: string }
+                example: { title: Request title must be at least 5 characters., affectedSystems: Select at least one affected system. }
+  schemas:
+    Status:
+      type: string
+      enum: [Submitted, In Review, Needs Info, Approved, Rejected, In Delivery, Done]
+    Department:
+      type: string
+      enum: [Finance, Sales, Marketing, Operations, Customer Support, HR, Legal & Compliance, IT, Product, Other]
+    NewFeatureRequest:
+      type: object
+      required: [requesterName, requesterEmail, department, title, category, problem, businessValue, affectedSystems, usersAffected, revenueImpact, urgency]
+      properties:
+        requesterName: { type: string, minLength: 2, maxLength: 100 }
+        requesterEmail: { type: string, format: email, maxLength: 254 }
+        department: { $ref: '#/components/schemas/Department' }
+        title: { type: string, minLength: 5, maxLength: 120 }
+        category: { type: string, enum: [New Feature, Enhancement, Integration, Reporting & Analytics, Automation, Compliance / Regulatory, Other] }
+        problem: { type: string, minLength: 20, maxLength: 4000 }
+        proposedSolution: { type: string, maxLength: 4000 }
+        businessValue: { type: string, minLength: 20, maxLength: 4000 }
+        successMetrics: { type: string, maxLength: 2000 }
+        affectedSystems:
+          type: array
+          minItems: 1
+          items: { type: string, enum: [Salesforce, SAP, Workday, ServiceNow, Customer Portal, Mobile App, Data Warehouse, Internal Tools, Other] }
+        usersAffected: { type: string, enum: ['1-10', '11-50', '51-250', '251-1000', '1000+'] }
+        revenueImpact: { type: string, enum: [None, Low (< $50K), Medium ($50K-$250K), High ($250K-$1M), Very High (> $1M)] }
+        regulatory: { type: boolean, default: false }
+        urgency: { type: string, enum: [Low, Medium, High, Critical] }
+        targetDate: { type: string, format: date, description: 'Today or later. Required when urgency is Critical.' }
+        urgencyReason: { type: string, maxLength: 1000, description: 'Required (min 10 chars) when urgency is Critical.' }
+    FeatureRequest:
+      allOf:
+        - $ref: '#/components/schemas/NewFeatureRequest'
+        - type: object
+          properties:
+            id: { type: string, example: FR-2026-0001 }
+            status: { $ref: '#/components/schemas/Status' }
+            priorityScore: { type: integer, minimum: 0, maximum: 100 }
+            priorityBand: { type: string, enum: [P1, P2, P3, P4] }
+            assignee: { type: string }
+            jiraKey: { type: string }
+            createdAt: { type: string, format: date-time }
+            updatedAt: { type: string, format: date-time }
+            history:
+              type: array
+              items:
+                type: object
+                properties:
+                  at: { type: string, format: date-time }
+                  actor: { type: string }
+                  type: { type: string, enum: [status, assignee, jiraKey] }
+                  from: { type: string, nullable: true }
+                  to: { type: string }
+            comments:
+              type: array
+              items:
+                type: object
+                properties:
+                  at: { type: string, format: date-time }
+                  author: { type: string }
+                  text: { type: string }

@@ -1,0 +1,19 @@
+sequenceDiagram
+  autonumber
+  actor PM as Triage PM
+  participant B as Triage board
+  participant A as API
+  participant S as Store
+  participant Q as Outbox worker (Phase 2)
+  participant J as Jira
+  participant N as Email / Teams
+  PM->>B: Open FR-2026-0042, choose Approved
+  B->>A: PATCH /api/requests/FR-2026-0042 {status: Approved}
+  A->>A: canTransition(In Review → Approved)?
+  A->>S: update status, append history
+  A-->>B: 200 updated request
+  Note over A,Q: Phase 2: an outbox event is written in the same transaction
+  Q->>J: Create epic (title, problem, value, link)
+  J-->>Q: FEAT-123
+  Q->>S: set jiraKey = FEAT-123
+  Q->>N: Notify requester "Approved — tracked as FEAT-123"

@@ -1,0 +1,19 @@
+flowchart LR
+  BU([Business user<br/>any department])
+  PM([Product triage<br/>PMs / BAs])
+  LEAD([Product leadership])
+  subgraph FI[Feature Intake]
+    APP[Feature Intake web app]
+  end
+  JIRA[(Jira<br/>delivery backlog)]
+  IDP[Corporate IdP<br/>Azure AD / Okta]
+  MAIL[Email / Teams]
+  BI[Excel / BI tools]
+
+  BU -- submits requests --> APP
+  PM -- triages, scores, routes --> APP
+  LEAD -- views KPIs --> APP
+  APP -- CSV export --> BI
+  APP -. Phase 2: create epic on approval .-> JIRA
+  APP -. Phase 2: OIDC sign-in .-> IDP
+  APP -. Phase 2: notifications .-> MAIL
