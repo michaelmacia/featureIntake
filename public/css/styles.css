@@ -130,6 +130,24 @@ button.link { background: none; border: 0; color: var(--accent); cursor: pointer
 .done { text-align: center; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 3rem 1.5rem; box-shadow: var(--shadow); }
 .done-icon { width: 56px; height: 56px; border-radius: 50%; margin: 0 auto 1rem; display: grid; place-items: center; font-size: 1.6rem; background: var(--accent-soft); color: var(--ok); }
 
+/* ---- concept mock ---- */
+.done .mock-panel { text-align: left; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border); }
+.detail-main .mock-panel { margin-top: 1.25rem; }
+.mock-head { display: flex; align-items: center; gap: .5rem; margin-bottom: .6rem; }
+.mock-head h3 { margin: 0; }
+.ai-tag { font-size: .7rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; padding: .1rem .45rem; border-radius: 4px; background: color-mix(in srgb, #7a5af8 16%, transparent); color: #6941c6; }
+.mock-frame { aspect-ratio: 4 / 3; max-width: 100%; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: #fff; }
+.mock-frame iframe { display: block; width: 100%; height: 100%; border: 0; transform-origin: 0 0; }
+.mock-meta { display: flex; justify-content: space-between; gap: 1rem; margin: .4rem 0 .8rem; }
+.mock-pending { display: flex; align-items: center; gap: .75rem; padding: 1.25rem; border: 1px dashed var(--border); border-radius: 8px; color: var(--muted); }
+.spinner { width: 18px; height: 18px; flex: none; border-radius: 50%; border: 2px solid var(--border); border-top-color: var(--accent); animation: spin .9s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .spinner { animation-duration: 3s; } }
+.mock-feedback label { display: block; font-size: .85rem; font-weight: 550; margin-bottom: .3rem; }
+.mock-feedback-row { display: flex; gap: .5rem; }
+.mock-feedback-row input { flex: 1; min-width: 0; }
+.mock-disclaimer { margin: .6rem 0 0; }
+
 /* ---- badges ---- */
 .band { display: inline-block; font-weight: 700; font-size: .75rem; padding: .1rem .45rem; border-radius: 6px; }
 .band-P1 { color: var(--p1); background: var(--p1-bg); }

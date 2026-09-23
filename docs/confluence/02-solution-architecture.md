@@ -83,6 +83,7 @@ flowchart TB
 | Rules | Enums, field limits, `validateRequest`, `computePriority`, `canTransition` | `public/js/rules.js` |
 | HTTP/API | Routing, body limits (100 KB), content-type checks, error mapping, CSV | `server/app.js` |
 | Store | In-memory list + serialized atomic file writes; sequential IDs | `server/store.js` |
+| Mock service | Background queue that asks Claude for a concept mock per request; sanitises and stores the HTML | `server/mockgen.js` |
 
 ## 4. Key flows
 
@@ -143,6 +144,38 @@ sequenceDiagram
   Q->>S: set jiraKey = FEAT-123
   Q->>N: Notify requester "Approved — tracked as FEAT-123"
 ```
+
+### 4.3 Concept mock generation
+
+```mermaid
+sequenceDiagram
+  autonumber
+  actor U as Requester / triage
+  participant W as Browser
+  participant A as API
+  participant M as MockService (queue, 2 concurrent)
+  participant C as Claude API (claude-opus-5)
+  participant F as mocks/FR-….html
+  U->>W: Submit request
+  W->>A: POST /api/requests
+  A->>M: request(record) → mock.status = pending
+  A-->>W: 201 (does not wait)
+  W->>A: GET /requests/{id}/mock (poll every 3s)
+  M->>C: messages.stream(system prompt + request as fenced data, fallbacks: "default")
+  C-->>M: <mock_html>…</mock_html>
+  M->>M: extract + sanitise (strip scripts, handlers, external URLs)
+  M->>F: write HTML
+  M->>A: mock.status = ready
+  W->>A: GET /requests/{id}/mock → ready
+  W->>A: iframe sandbox src=/requests/{id}/mock.html
+  A-->>W: HTML under CSP sandbox, default-src none
+  U->>W: "Add an approval step" → Regenerate
+  W->>A: POST /requests/{id}/mock {feedback}
+```
+
+**Trust boundary.** The request text comes from end users, and the model's HTML output is treated as untrusted. The system prompt fences the request as data. The output is sanitised, then served under a CSP `sandbox` with no network access, and rendered in an `<iframe sandbox>` with no scripts and no same-origin access. A malicious request can at worst produce an ugly picture.
+
+**Data sent to Anthropic.** Sent: title, category, department, systems, problem, proposed solution, business value, success metrics and reach. Not sent: requester name and email. The feature can be switched off with `MOCKS=off`.
 
 ## 5. Request lifecycle
 

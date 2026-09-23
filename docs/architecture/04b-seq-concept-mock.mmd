@@ -1,0 +1,23 @@
+sequenceDiagram
+  autonumber
+  actor U as Requester / triage
+  participant W as Browser
+  participant A as API
+  participant M as MockService (queue, 2 concurrent)
+  participant C as Claude API (claude-opus-5)
+  participant F as mocks/FR-….html
+  U->>W: Submit request
+  W->>A: POST /api/requests
+  A->>M: request(record) → mock.status = pending
+  A-->>W: 201 (does not wait)
+  W->>A: GET /requests/{id}/mock (poll every 3s)
+  M->>C: messages.stream(system prompt + request as fenced data, fallbacks: "default")
+  C-->>M: <mock_html>…</mock_html>
+  M->>M: extract + sanitise (strip scripts, handlers, external URLs)
+  M->>F: write HTML
+  M->>A: mock.status = ready
+  W->>A: GET /requests/{id}/mock → ready
+  W->>A: iframe sandbox src=/requests/{id}/mock.html
+  A-->>W: HTML under CSP sandbox, default-src none
+  U->>W: "Add an approval step" → Regenerate
+  W->>A: POST /requests/{id}/mock {feedback}

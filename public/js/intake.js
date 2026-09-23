@@ -27,6 +27,7 @@
   const summary = document.getElementById('error-summary');
   let current = 0;
   const touched = new Set();
+  let stopMock = () => {};
 
   // ---- build dynamic controls ----
   form.querySelectorAll('select[data-enum]').forEach((s) => fillSelect(s, ENUMS[s.dataset.enum]));
@@ -210,6 +211,7 @@
       const done = document.getElementById('done-view');
       done.hidden = false;
       done.focus();
+      stopMock = window.App.mountMock(document.getElementById('mock-panel'), created.id, { actor: created.requesterName });
     } catch (err) {
       summary.hidden = false;
       summary.replaceChildren(el('strong', { text: err.message }),
@@ -222,6 +224,8 @@
   });
 
   document.getElementById('another').addEventListener('click', () => {
+    stopMock();
+    document.getElementById('mock-panel').hidden = true;
     form.reset();
     touched.clear();
     syncConditional();

@@ -2,10 +2,10 @@
 (function () {
   'use strict';
   const { ENUMS, TRANSITIONS } = window.IntakeRules;
-  const { api, el, fillSelect, fmtDate, statusClass } = window.App;
+  const { api, el, fillSelect, fmtDate, statusClass, mountMock } = window.App;
 
   const $ = (id) => document.getElementById(id);
-  const state = { sort: '-createdAt', items: [], openId: null };
+  const state = { sort: '-createdAt', items: [], openId: null, stopMock: () => {} };
   const ACTOR_KEY = 'featureIntake.actor';
 
   fillSelect($('f-status'), ['open', ...ENUMS.status], 'All statuses');
@@ -77,7 +77,11 @@
   // ---- detail dialog ----
   const dlg = $('detail');
   $('d-close').addEventListener('click', () => dlg.close());
-  dlg.addEventListener('close', () => { state.openId = null; history.replaceState(null, '', location.pathname); });
+  dlg.addEventListener('close', () => {
+    state.stopMock();
+    state.openId = null;
+    history.replaceState(null, '', location.pathname);
+  });
 
   async function openDetail(id) {
     const r = await api('/api/requests/' + encodeURIComponent(id));
@@ -109,14 +113,18 @@
       ['Regulatory', r.regulatory ? 'Yes' : 'No'],
       ['Jira', r.jiraKey || '—'],
     ];
+    const mockPanel = el('section', { class: 'mock-panel', 'aria-live': 'polite', hidden: true });
     $('d-main').replaceChildren(...[
       el('dl', { class: 'facts' }, facts.map(([k, v]) => el('div', {}, el('dt', { text: k }), el('dd', {}, v)))),
+      mockPanel,
       section('Problem', r.problem),
       section('Proposed solution', r.proposedSolution),
       section('Business value', r.businessValue),
       section('Success metrics', r.successMetrics),
       section('Why critical', r.urgencyReason),
     ].filter(Boolean));
+    state.stopMock();
+    state.stopMock = mountMock(mockPanel, r.id, { actor: $('actor').value.trim() || undefined });
 
     fillSelect($('t-status'), [r.status, ...TRANSITIONS[r.status]], r.status);
     $('t-status').remove(0); // no blank option: first entry is the current status
@@ -129,7 +137,8 @@
     const events = [
       ...r.history.map((h) => ({ at: h.at, who: h.actor, text: h.type === 'status'
         ? (h.from ? `moved ${h.from} → ${h.to}` : 'submitted the request')
-        : `set ${h.type === 'jiraKey' ? 'Jira key' : h.type} to "${h.to || '(none)'}"` })),
+        : h.type === 'mock' ? `asked for a new concept mock (${h.to})`
+          : `set ${h.type === 'jiraKey' ? 'Jira key' : h.type} to "${h.to || '(none)'}"` })),
       ...r.comments.map((c) => ({ at: c.at, who: c.author, text: c.text, comment: true })),
     ].sort((a, b) => b.at.localeCompare(a.at));
     $('d-timeline').replaceChildren(...events.map((e) => el('li', { class: e.comment ? 'comment' : '' },

@@ -168,6 +168,51 @@ paths:
               schema: { $ref: '#/components/schemas/FeatureRequest' }
         '404': { $ref: '#/components/responses/Error' }
         '422': { $ref: '#/components/responses/ValidationError' }
+  /api/requests/{id}/mock:
+    parameters:
+      - { name: id, in: path, required: true, schema: { type: string } }
+    get:
+      tags: [Requests]
+      summary: Concept mock status
+      responses:
+        '200':
+          description: Status (disabled when the server has no mock generator)
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/MockStatus' }
+        '404': { $ref: '#/components/responses/Error' }
+    post:
+      tags: [Requests]
+      summary: Regenerate the concept mock, optionally with feedback
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                feedback: { type: string, maxLength: 1000 }
+                actor: { type: string }
+      responses:
+        '202':
+          description: Queued
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/MockStatus' }
+        '409': { $ref: '#/components/responses/Error' }
+        '503': { $ref: '#/components/responses/Error' }
+  /api/requests/{id}/mock.html:
+    parameters:
+      - { name: id, in: path, required: true, schema: { type: string } }
+    get:
+      tags: [Requests]
+      summary: Generated concept mock page
+      description: "Untrusted AI-generated HTML, served with Content-Security-Policy: sandbox; default-src 'none'. Embed only in <iframe sandbox>."
+      responses:
+        '200':
+          description: HTML page
+          content:
+            text/html: { schema: { type: string } }
+        '404': { $ref: '#/components/responses/Error' }
   /api/requests/{id}/comments:
     parameters:
       - { name: id, in: path, required: true, schema: { type: string } }
@@ -214,6 +259,17 @@ components:
                 additionalProperties: { type: string }
                 example: { title: Request title must be at least 5 characters., affectedSystems: Select at least one affected system. }
   schemas:
+    MockStatus:
+      type: object
+      properties:
+        status: { type: string, enum: [disabled, none, pending, ready, failed] }
+        requestedAt: { type: string, format: date-time }
+        acceptedAt: { type: string, format: date-time, description: When the Claude API accepted the generation request (still pending) }
+        requestId: { type: string, description: Claude API request ID, for support }
+        completedAt: { type: string, format: date-time }
+        model: { type: string, example: claude-opus-5 }
+        feedback: { type: string }
+        error: { type: string }
     Status:
       type: string
       enum: [Submitted, In Review, Needs Info, Approved, Rejected, In Delivery, Done]
@@ -254,6 +310,7 @@ components:
             priorityBand: { type: string, enum: [P1, P2, P3, P4] }
             assignee: { type: string }
             jiraKey: { type: string }
+            mock: { $ref: '#/components/schemas/MockStatus' }
             createdAt: { type: string, format: date-time }
             updatedAt: { type: string, format: date-time }
             history:

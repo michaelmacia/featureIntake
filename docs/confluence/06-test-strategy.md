@@ -10,7 +10,14 @@
 | UI (automated, Phase 2) | Happy path and validation in Chromium / WebKit | Playwright + axe-core | `e2e/` (planned) |
 | Non-functional | Load (10k requests), security headers, accessibility | k6, OWASP ZAP baseline, axe | CI nightly (planned) |
 
-Run everything: `npm test` (40 tests, about 1 second, no dependencies).
+Run everything: `npm test` (49 tests, about 1 second, no network access).
+
+Concept mocks (`tests/mocks.test.js`) use a fake Claude client and fake generators, so tests never call the API. They check:
+- **Request to Claude:** model, `fallbacks: "default"`, effort and `max_tokens`; refusals and cut-off replies become errors.
+- **Parsing and sanitising:** HTML is pulled out of the reply, and scripts, handlers, iframes, forms, external URLs and meta refresh are stripped.
+- **API flow:** a pending mock doesn't block submission; the page is served with the sandbox CSP; regenerate works with feedback; a second regenerate while one is running gets 409; failures are reported; pending mocks resume after restart; when the feature is off, the endpoints return `disabled`/503/404.
+
+The quality of real mocks is checked by hand in UAT-08.
 
 ## Test data
 
@@ -75,6 +82,13 @@ Run `npm run seed` and `npm start` first.
 1. Complete UAT-01 using only the keyboard.
 2. Repeat with NVDA or VoiceOver. *Expect:* step changes, errors and the confirmation are announced.
 3. Check the layout at 360 px width and in dark mode.
+
+**UAT-08 Concept mock (needs `ANTHROPIC_API_KEY`)**
+1. Submit a request. *Expect:* the confirmation shows "Sketching a concept mock…" and a mock appears within about a minute. It is labelled AI-generated, shows an Assumptions panel, and uses vocabulary from the request.
+2. Type feedback ("show this inside SAP") and click **Regenerate**. *Expect:* a new mock that reflects the feedback; the triage timeline shows "asked for a new concept mock".
+3. Open the same request on the triage board. *Expect:* the same mock appears in the detail dialog.
+4. Submit the `<script>` edge case from `edge-cases.json`. *Expect:* no dialog or alert fires, and *Open full size* shows a static page.
+5. Restart the server while a mock is generating. *Expect:* it completes after the restart.
 
 ## Entry and exit criteria
 

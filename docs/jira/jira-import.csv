@@ -4,6 +4,7 @@ Issue Id,Parent Id,Issue Type,Summary,Epic Name,Description,Priority,Story Point
 3,,Epic,"Platform, API & Scoring","Platform, API & Scoring","REST API, persistence, priority scoring and baseline security for the intake service.",High,,MVP,feature-intake,,,
 4,,Epic,Quality & Operations,Quality & Operations,"Automated tests, CI, deployment and monitoring so the service can run in production.",High,,MVP,feature-intake,,,
 5,,Epic,Integrations & Notifications,Integrations & Notifications,"SSO, Jira sync, email/Teams notifications and a requester self-service view.",High,,Phase 2,feature-intake,,,
+6,,Epic,AI Concept Mocks,AI Concept Mocks,Every submission gets an AI-generated concept mock UI that the requester and triage can see and refine.,High,,MVP,feature-intake,,,
 100,1,Story,Multi-step intake wizard,,"h4. User story
 As a business user I want the form split into short steps so that I am not overwhelmed and can see my progress.
 
@@ -331,7 +332,81 @@ h4. Definition of done
 * Code reviewed and merged
 * Tests added/updated and passing
 * Docs updated if behaviour changed",Medium,3,Phase 2,feature-intake,frontend,intake,
-127,5,Story,Migrate storage to PostgreSQL,,"h4. User story
+127,6,Story,Generate a concept mock on submission,,"h4. User story
+As a business user I want to see a sketch of my idea right after I submit it so that I can check the product team will understand it.
+
+h4. Acceptance criteria
+* Submitting never waits on the mock; the request is created with mock.status = pending
+* A background queue (2 concurrent) calls claude-opus-5 with the request fenced as data; name and email are not sent
+* The reply HTML is extracted, sanitised and stored; status becomes ready or failed with a readable reason
+* Pending mocks resume after a server restart
+* Feature is off without ANTHROPIC_API_KEY or with MOCKS=off, and the UI hides it
+
+h4. Definition of done
+* Code reviewed and merged
+* Tests added/updated and passing
+* Docs updated if behaviour changed",High,5,MVP,feature-intake,backend,ai,
+128,6,Story,Show the mock on the confirmation screen,,"h4. User story
+As a business user I want the mock to appear below my confirmation so that I do not have to go looking for it.
+
+h4. Acceptance criteria
+* A ""Sketching a concept mock"" state shows while pending (polls every 3s)
+* The ready mock renders at desktop width, scaled to fit, with an Open full size link
+* The panel is labelled AI-generated and not a design commitment
+
+h4. Definition of done
+* Code reviewed and merged
+* Tests added/updated and passing
+* Docs updated if behaviour changed",High,3,MVP,feature-intake,frontend,ai,
+129,6,Story,Regenerate the mock with feedback,,"h4. User story
+As a requester or triage PM I want to say what is wrong with the mock and get a new one so that it matches the intent.
+
+h4. Acceptance criteria
+* Feedback (up to 1000 chars) is sent to the model with the request
+* Only one generation per request at a time (409 otherwise)
+* Each regeneration is recorded in the request history with the actor
+
+h4. Definition of done
+* Code reviewed and merged
+* Tests added/updated and passing
+* Docs updated if behaviour changed",Medium,3,MVP,feature-intake,frontend,backend,ai
+130,6,Story,Show the mock in the triage detail view,,"h4. User story
+As a triage PM I want to see the same mock the requester saw so that we discuss the same picture.
+
+h4. Acceptance criteria
+* Detail dialog shows mock status, the mock, and regenerate controls
+* Requests created before the feature was on offer a Generate concept mock button
+
+h4. Definition of done
+* Code reviewed and merged
+* Tests added/updated and passing
+* Docs updated if behaviour changed",Medium,2,MVP,feature-intake,frontend,triage,ai
+131,6,Story,Sandbox generated HTML,,"h4. User story
+As the security team I want AI-generated HTML isolated so that a crafted request cannot attack users.
+
+h4. Acceptance criteria
+* Scripts, event handlers, iframes, forms, external URLs and meta refresh are stripped
+* mock.html is served with CSP ""sandbox; default-src 'none'"" and frame-ancestors 'self'
+* The UI embeds it only in <iframe sandbox> with no allow flags
+* Tests cover each stripped construct
+
+h4. Definition of done
+* Code reviewed and merged
+* Tests added/updated and passing
+* Docs updated if behaviour changed",Highest,3,MVP,feature-intake,security,ai,
+132,6,Story,Mock cost and quality monitoring,,"h4. User story
+As the product owner I want to see mock usage and failures so that I can manage cost and quality.
+
+h4. Acceptance criteria
+* Token usage and duration are logged per mock
+* Weekly count of generated, regenerated and failed mocks
+* Sample 20 mocks a month for a quality review; tune MOCK_EFFORT or the prompt
+
+h4. Definition of done
+* Code reviewed and merged
+* Tests added/updated and passing
+* Docs updated if behaviour changed",Low,2,MVP,feature-intake,observability,ai,
+133,5,Story,Migrate storage to PostgreSQL,,"h4. User story
 As an operator I want a managed database so that the service can scale beyond one instance and be backed up.
 
 h4. Acceptance criteria

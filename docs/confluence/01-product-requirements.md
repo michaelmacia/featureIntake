@@ -41,7 +41,7 @@ Feature requests reach the product team through email, chat, hallway conversatio
 
 ## 4. User journeys
 
-1. **Submit.** Priya opens the form, enters her details, describes the problem and value, and picks systems, reach and urgency. She reviews her answers and submits. She receives a reference `FR-2026-0042` and an initial priority band.
+1. **Submit.** Priya opens the form, enters her details, describes the problem and value, and picks systems, reach and urgency. She reviews her answers and submits. She receives a reference `FR-2026-0042` and an initial priority band. Within about a minute a **concept mock** of her idea appears below the confirmation. If it misses the point, she types "the approval step should happen in SAP, not Salesforce" and regenerates. Triage sees the same mock, so the first conversation starts from a shared picture.
 2. **Triage.** Jordan filters the board to *Awaiting triage*, sorts by priority, opens the request, sets it to *In Review* and assigns it to himself. If something is missing, he moves it to *Needs Info* with a question.
 3. **Decide.** At the weekly triage meeting the team approves (and links the Jira epic) or rejects (with a reason).
 4. **Report.** Morgan checks the KPI tiles and exports CSV for the quarterly review.
@@ -70,6 +70,8 @@ Feature requests reach the product team through email, chat, hallway conversatio
 | FR-18 | "My requests" page; requester can answer Needs Info | Should | Phase 2 |
 | FR-19 | Attachments (screenshots, spreadsheets) up to 10 MB | Could | Phase 2 |
 | FR-20 | Duplicate detection: suggest similar existing requests while typing the title | Could | Later |
+| FR-21 | After submission, generate an AI concept mock UI of the idea. Show it on the confirmation screen and in triage, labelled as AI-generated and not a commitment | Should | MVP |
+| FR-22 | Requester and triage can regenerate the mock with written feedback. Each regeneration is recorded in history | Should | MVP |
 
 ## 6. Non-functional requirements
 

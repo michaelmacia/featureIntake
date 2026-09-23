@@ -10,7 +10,8 @@
 | Platform, API & Scoring | MVP | 4 | 14 |
 | Quality & Operations | MVP | 4 | 10 |
 | Integrations & Notifications | Phase 2 | 6 | 23 |
-| **Total** | | **28** | **87** |
+| AI Concept Mocks | MVP | 6 | 18 |
+| **Total** | | **34** | **105** |
 
 ## Intake Form _(MVP)_
 
@@ -370,3 +371,81 @@ SSO, Jira sync, email/Teams notifications and a requester self-service view.
 - [ ] Repository interface unchanged; JSON store kept for local development
 - [ ] One-off migration script imports the JSON file
 - [ ] Point-in-time recovery enabled
+
+## AI Concept Mocks _(MVP)_
+
+Every submission gets an AI-generated concept mock UI that the requester and triage can see and refine.
+
+### Generate a concept mock on submission
+
+**Priority:** High · **Points:** 5 · **Labels:** backend, ai
+
+> As a business user I want to see a sketch of my idea right after I submit it so that I can check the product team will understand it.
+
+**Acceptance criteria**
+
+- [ ] Submitting never waits on the mock; the request is created with mock.status = pending
+- [ ] A background queue (2 concurrent) calls claude-opus-5 with the request fenced as data; name and email are not sent
+- [ ] The reply HTML is extracted, sanitised and stored; status becomes ready or failed with a readable reason
+- [ ] Pending mocks resume after a server restart
+- [ ] Feature is off without ANTHROPIC_API_KEY or with MOCKS=off, and the UI hides it
+
+### Show the mock on the confirmation screen
+
+**Priority:** High · **Points:** 3 · **Labels:** frontend, ai
+
+> As a business user I want the mock to appear below my confirmation so that I do not have to go looking for it.
+
+**Acceptance criteria**
+
+- [ ] A "Sketching a concept mock" state shows while pending (polls every 3s)
+- [ ] The ready mock renders at desktop width, scaled to fit, with an Open full size link
+- [ ] The panel is labelled AI-generated and not a design commitment
+
+### Regenerate the mock with feedback
+
+**Priority:** Medium · **Points:** 3 · **Labels:** frontend, backend, ai
+
+> As a requester or triage PM I want to say what is wrong with the mock and get a new one so that it matches the intent.
+
+**Acceptance criteria**
+
+- [ ] Feedback (up to 1000 chars) is sent to the model with the request
+- [ ] Only one generation per request at a time (409 otherwise)
+- [ ] Each regeneration is recorded in the request history with the actor
+
+### Show the mock in the triage detail view
+
+**Priority:** Medium · **Points:** 2 · **Labels:** frontend, triage, ai
+
+> As a triage PM I want to see the same mock the requester saw so that we discuss the same picture.
+
+**Acceptance criteria**
+
+- [ ] Detail dialog shows mock status, the mock, and regenerate controls
+- [ ] Requests created before the feature was on offer a Generate concept mock button
+
+### Sandbox generated HTML
+
+**Priority:** Highest · **Points:** 3 · **Labels:** security, ai
+
+> As the security team I want AI-generated HTML isolated so that a crafted request cannot attack users.
+
+**Acceptance criteria**
+
+- [ ] Scripts, event handlers, iframes, forms, external URLs and meta refresh are stripped
+- [ ] mock.html is served with CSP "sandbox; default-src 'none'" and frame-ancestors 'self'
+- [ ] The UI embeds it only in <iframe sandbox> with no allow flags
+- [ ] Tests cover each stripped construct
+
+### Mock cost and quality monitoring
+
+**Priority:** Low · **Points:** 2 · **Labels:** observability, ai
+
+> As the product owner I want to see mock usage and failures so that I can manage cost and quality.
+
+**Acceptance criteria**
+
+- [ ] Token usage and duration are logged per mock
+- [ ] Weekly count of generated, regenerated and failed mocks
+- [ ] Sample 20 mocks a month for a quality review; tune MOCK_EFFORT or the prompt

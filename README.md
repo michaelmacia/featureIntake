@@ -1,12 +1,14 @@
 # Feature Intake
 
-An intake form where business users submit feature requests, and a triage board where product teams review, score and route them. The package has no runtime dependencies: Node.js 20 or later is all you need.
+An intake form where business users submit feature requests, and a triage board where product teams review, score and route them. After each submission, Claude sketches a **concept mock UI** of the idea. The requester sees it on the confirmation screen, and triage sees it on the board. Either can regenerate it with feedback.
 
 ![Triage board](docs/mocks/screenshots/triage-board.png)
 
 ## Quick start
 
 ```bash
+npm install                          # one dependency: @anthropic-ai/sdk (only used for concept mocks)
+export ANTHROPIC_API_KEY=sk-ant-...  # optional: turns on concept mocks
 npm run seed   # optional: load 40 demo requests
 npm start      # http://localhost:3000  (form)   http://localhost:3000/requests  (triage board)
 npm test       # 40 unit + API tests
@@ -17,7 +19,7 @@ npm test       # 40 unit + API tests
 | Path | Contents |
 |---|---|
 | `public/` | Front end: `index.html` (4-step intake wizard), `requests.html` (triage board), `js/rules.js` (validation, scoring and workflow, shared with the server) |
-| `server/` | Node HTTP server: `app.js` (API + static files), `store.js` (atomic JSON persistence), `seed.js` |
+| `server/` | Node HTTP server: `app.js` (API + static files), `store.js` (atomic JSON persistence), `mockgen.js` (Claude concept-mock generation queue), `seed.js` |
 | `tests/` | `node:test` suites for rules and API |
 | `test-data/` | Deterministic generator plus `seed.json`, `requests.csv`, `valid-payload.json`, `edge-cases.json`, `invalid-payloads.json` |
 | `docs/confluence/` | Confluence-ready pages: home, PRD, architecture, API, data model, process, test strategy, runbook, ADRs |
@@ -51,6 +53,12 @@ msedge --headless=new --window-size=1280,900 --virtual-time-budget=4000 --screen
 | Env var | Default |
 |---|---|
 | `PORT` | `3000` |
-| `DATA_FILE` | `./data/requests.json` |
+| `DATA_FILE` | `./data/requests.json` (mocks are stored in `mocks/` next to it) |
+| `ANTHROPIC_API_KEY` | unset. When set, concept mocks turn on |
+| `MOCKS` | `auto` (on when a key is set), or `on` / `off` |
+| `MOCK_MODEL` | `claude-opus-5` |
+| `MOCK_EFFORT` | `medium`. Higher means better mocks but a longer wait (`low` … `max`) |
+
+**Concept mocks and privacy:** each request's title, problem, solution, value, metrics, department and systems are sent to the Anthropic API. The requester's name and email are not sent. Set `MOCKS=off` if that isn't acceptable for your data. Generated HTML is sanitised and shown in a sandboxed iframe, so it can't run scripts or load anything.
 
 > The MVP has no in-app authentication (see ADR-004). Run it behind an SSO proxy or VPN until Phase 2.

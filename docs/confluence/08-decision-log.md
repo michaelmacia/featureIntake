@@ -8,6 +8,7 @@
 | ADR-004 | Ship MVP without in-app auth, behind SSO proxy / VPN | Accepted (temporary) | 2026-09-23 |
 | ADR-005 | Additive, explainable priority score | Accepted | 2026-09-23 |
 | ADR-006 | Transactional outbox for Jira and notifications | Proposed (Phase 2) | 2026-09-23 |
+| ADR-007 | AI concept mocks generated asynchronously with Claude, rendered sandboxed | Accepted | 2026-09-23 |
 
 ---
 
@@ -16,6 +17,7 @@
 **Context.** The app is two screens and about ten endpoints. The team wants something any developer can run immediately and that has no supply-chain surface to patch.
 **Decision.** Use Node's built-in `http`, `fs` and `node:test`, with plain HTML/CSS/JS in the browser. No framework and no build step.
 **Consequences.** + No `npm install`, nothing to patch, and fast startup. − Routing and DOM helpers are hand-written (about 50 lines). If the UI grows past about 5 screens, revisit this and consider React or Vue with Vite.
+**Amended by ADR-007:** one runtime dependency, `@anthropic-ai/sdk`, for concept mocks. The app still runs without an API key; mocks simply switch off.
 
 ### ADR-002 — One rules module shared by browser and server
 
@@ -40,6 +42,12 @@
 **Context.** Multiplicative models (RICE-style) are hard for business users to reason about and let a single zero dominate the result.
 **Decision.** The score is reach (0–35) + value (0–35) + urgency (0–30) + a regulatory bonus (15), capped at 100, with fixed bands.
 **Consequences.** + A requester can predict the result, and the form shows it live. − It is coarse. Effort is not included, because requesters can't estimate it; triage weighs effort in the meeting.
+
+### ADR-007 — AI concept mocks generated asynchronously, rendered sandboxed
+
+**Context.** Requesters struggle to describe UI ideas in prose, and triage often misreads them. A picture shown right after submission lets the requester confirm or correct the idea before anyone spends time on it.
+**Decision.** On submit, queue a Claude request (`claude-opus-5`, effort `medium`, streaming, server-side refusal fallback). The prompt fences the request as data and asks for one self-contained HTML page with an "Assumptions" panel. The server extracts and sanitises the HTML, stores it beside the data file, and serves it under `CSP: sandbox; default-src 'none'` for display in `<iframe sandbox>`. Requester and triage can regenerate with feedback. The requester's name and email are not sent.
+**Consequences.** + Faster shared understanding, and the Assumptions panel invites correction. − Per-submission API cost and a wait of up to about a minute; request content leaves the company boundary (switch off with `MOCKS=off`); mocks may look more "decided" than they are, so every mock is labelled AI-generated and not a commitment. Alternatives rejected: generating synchronously (blocks submission), and letting the model write React code (needs script execution, which is a much larger attack surface).
 
 ### ADR-006 — Transactional outbox for Jira and notifications (proposed)
 

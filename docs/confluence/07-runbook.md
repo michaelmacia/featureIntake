@@ -2,9 +2,10 @@
 
 ## Run locally
 
-Requirements: Node.js 20 or later. No `npm install` is needed because there are no runtime dependencies.
+Requirements: Node.js 20 or later.
 
 ```bash
+npm install     # installs @anthropic-ai/sdk (used only for concept mocks)
 npm run seed    # optional: load 40 demo requests into data/requests.json
 npm start       # http://localhost:3000  (form)  and  /requests  (triage board)
 npm run dev     # same, restarts on file changes
@@ -14,7 +15,22 @@ npm test        # unit + API tests
 | Env var | Default | Purpose |
 |---|---|---|
 | `PORT` | 3000 | HTTP port |
-| `DATA_FILE` | `./data/requests.json` | Where requests are stored |
+| `DATA_FILE` | `./data/requests.json` | Where requests are stored. Mock HTML goes in `mocks/` beside it |
+| `ANTHROPIC_API_KEY` | — | Claude API key for concept mocks |
+| `MOCKS` | `auto` | `auto` = on when a key is set; `on`; `off` |
+| `MOCK_MODEL` | `claude-opus-5` | Model used for mocks |
+| `MOCK_EFFORT` | `medium` | `low`, `medium`, `high`, `xhigh` or `max`. Higher is better quality but a longer wait |
+
+The startup log says whether concept mocks are on.
+
+## Concept mocks
+
+- **Flow:** on submit, the request gets `mock.status = pending` and is queued (2 at a time). The server calls Claude, which returns a single HTML page. That page is sanitised and saved to `mocks/<id>.html`, and the status becomes `ready` or `failed`. Submission never waits on this step.
+- **Restarts:** anything still `pending` at startup is re-queued.
+- **Cost:** roughly one request per submission, plus one per "Regenerate". Token usage is logged per mock (`mock FR-… ready in …ms { input, output }`).
+- **Log lines per mock:** `queued`, then `accepted by Claude API (request req_…) after …ms; generating...` once the API returns 200, then `ready` or `failed`. "Accepted" also sets `mock.acceptedAt` and `mock.requestId` while the status is still `pending`.
+- **Refusals:** requests use the API's server-side fallback (`fallbacks: "default"`). If every model declines, the status is `failed` with a readable reason.
+- **Security:** mock HTML is untrusted. It is served with `Content-Security-Policy: sandbox; default-src 'none'`, shown in an `<iframe sandbox>`, and has scripts, handlers and external URLs stripped.
 
 ## Deploy (MVP)
 
@@ -25,7 +41,8 @@ Example container:
 ```dockerfile
 FROM node:22-alpine
 WORKDIR /app
-COPY package.json ./
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev
 COPY server ./server
 COPY public ./public
 COPY test-data/seed.json ./test-data/seed.json
@@ -61,6 +78,11 @@ Mount a persistent volume at `/data`. **Put the app behind the corporate SSO pro
 | 422 on submit that "looks fine" | Server rule failed (for example a past date after midnight) | Read `fields` in the response; the UI shows it in the error summary |
 | 413 on submit | Body > 100 KB | Shorten long text fields; limits are 4000 characters |
 | Styles or scripts not loading | Something added inline `<script>`/`style=` blocked by CSP | Move it into `/css` or `/js` files |
+| No concept mock section appears | Mocks are off (no `ANTHROPIC_API_KEY`, or `MOCKS=off`) | Check the startup log; set the key |
+| Mock says "not authorised" | Bad or missing API key | Fix `ANTHROPIC_API_KEY` and restart, then click **Try again** |
+| Mock says "rejected the request (400)" | Usually account-level: e.g. "credit balance is too low" in the server log | Search the server log for the reference ID. Fix billing at console.anthropic.com → Plans & Billing, then click **Try again** on each failed request |
+| Mock says "busy" | API rate limit | Wait a minute and click **Try again** (the SDK already retries twice) |
+| Mock stuck on "Sketching…" | Server restarted mid-generation, or a very slow request | Pending mocks resume on restart; lower `MOCK_EFFORT` to shorten waits |
 | Excel shows odd characters | Opened CSV via an import wizard with the wrong encoding | Open by double-click (the file has a UTF-8 BOM), or choose UTF-8 |
 
 ## Common admin tasks

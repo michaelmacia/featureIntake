@@ -125,14 +125,32 @@ function summarize(all) {
   return { total: all.length, open, byStatus, openByPriority: byBand };
 }
 
-function createApp({ store, now = () => new Date() }) {
+// Generated mocks are untrusted HTML: no scripts, no network, framable only by this app.
+const MOCK_HEADERS = {
+  'X-Content-Type-Options': 'nosniff',
+  'X-Frame-Options': 'SAMEORIGIN',
+  'Referrer-Policy': 'no-referrer',
+  'Content-Security-Policy': "sandbox; default-src 'none'; style-src 'unsafe-inline'; img-src data:; font-src data:; frame-ancestors 'self'",
+  'Content-Type': 'text/html; charset=utf-8',
+  'Cache-Control': 'no-store',
+};
+
+function mockStatus(record, mocks) {
+  if (!mocks || !mocks.enabled) return { status: 'disabled' };
+  return record.mock || { status: 'none' };
+}
+
+function createApp({ store, now = () => new Date(), mocks }) {
   async function handleApi(req, res, url) {
     const parts = url.pathname.split('/').filter(Boolean); // ['api', ...]
     const method = req.method;
 
     if (parts[1] === 'health' && method === 'GET') return send(res, 200, { status: 'ok', requests: store.list().length });
     if (parts[1] === 'meta' && method === 'GET') {
-      return send(res, 200, { enums: Rules.ENUMS, transitions: Rules.TRANSITIONS, limits: Rules.TEXT_LIMITS });
+      return send(res, 200, {
+        enums: Rules.ENUMS, transitions: Rules.TRANSITIONS, limits: Rules.TEXT_LIMITS,
+        features: { mocks: Boolean(mocks && mocks.enabled) },
+      });
     }
     if (parts[1] === 'stats' && method === 'GET') return send(res, 200, summarize(store.list()));
 
@@ -162,6 +180,7 @@ function createApp({ store, now = () => new Date() }) {
           history: [{ at: ts, actor: value.requesterName, type: 'status', from: null, to: 'Submitted' }],
           comments: [],
         };
+        if (mocks && mocks.enabled) mocks.request(record);
         await store.insert(record);
         return send(res, 201, record, { Location: `/api/requests/${record.id}` });
       }
@@ -223,6 +242,30 @@ function createApp({ store, now = () => new Date() }) {
         return send(res, 200, record);
       }
       throw new HttpError(405, 'Method not allowed.');
+    }
+
+    if (parts[3] === 'mock' && parts.length === 4) {
+      if (method === 'GET') return send(res, 200, mockStatus(record, mocks));
+      if (method === 'POST') {
+        if (!mocks || !mocks.enabled) throw new HttpError(503, 'Mock generation is not enabled on this server.');
+        if (record.mock && record.mock.status === 'pending') throw new HttpError(409, 'A mock is already being generated.');
+        const body = await readJson(req);
+        const feedback = typeof body.feedback === 'string' ? body.feedback.trim().slice(0, 1000) : '';
+        mocks.request(record, feedback || undefined);
+        record.history.push({ at: now().toISOString(), actor: actorFrom(req, body), type: 'mock', from: null, to: feedback ? 'regenerated with feedback' : 'regenerated' });
+        await store.save();
+        return send(res, 202, record.mock);
+      }
+      throw new HttpError(405, 'Method not allowed.');
+    }
+
+    if (parts[3] === 'mock.html' && parts.length === 4 && (method === 'GET' || method === 'HEAD')) {
+      const status = mockStatus(record, mocks);
+      if (status.status !== 'ready') throw new HttpError(404, 'No mock available for this request yet.');
+      let html;
+      try { html = await mocks.readHtml(record.id); } catch { throw new HttpError(404, 'Mock file is missing.'); }
+      res.writeHead(200, MOCK_HEADERS);
+      return res.end(method === 'HEAD' ? undefined : html);
     }
 
     if (parts[3] === 'comments' && parts.length === 4 && method === 'POST') {

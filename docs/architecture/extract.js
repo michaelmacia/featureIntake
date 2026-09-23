@@ -6,7 +6,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const SOURCES = {
-  '02-solution-architecture.md': ['01-system-context', '02-mvp-containers', '03-seq-submit-request', '04-seq-triage-decision', '05-request-lifecycle', '06-target-architecture', '07-deployment-pipeline'],
+  '02-solution-architecture.md': ['01-system-context', '02-mvp-containers', '03-seq-submit-request', '04-seq-triage-decision', '04b-seq-concept-mock', '05-request-lifecycle', '06-target-architecture', '07-deployment-pipeline'],
   '04-data-model.md': ['08-erd-phase2'],
 };
 

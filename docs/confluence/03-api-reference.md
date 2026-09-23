@@ -21,6 +21,20 @@ Base URL (local): `http://localhost:3000`. The machine-readable contract is `doc
 | GET | `/api/requests/{id}` | One request |
 | PATCH | `/api/requests/{id}` | Triage update: status, assignee, jiraKey, note |
 | POST | `/api/requests/{id}/comments` | Add a comment |
+| GET | `/api/requests/{id}/mock` | Concept mock status: `disabled`, `none`, `pending`, `ready` or `failed` |
+| POST | `/api/requests/{id}/mock` | Regenerate the mock, optionally with `{ "feedback": "…", "actor": "…" }`. Returns `202`; `409` if one is already pending; `503` if mocks are off |
+| GET | `/api/requests/{id}/mock.html` | The generated mock page. Sandboxed CSP, so embed it only in `<iframe sandbox>`. `404` until ready |
+
+### Concept mocks
+
+A request created while mocks are enabled comes back with `"mock": { "status": "pending", "requestedAt": "…" }`. Poll `GET …/mock` (the UI polls every 3 seconds) until the status is `ready` or `failed`:
+
+```json
+{ "status": "ready", "requestedAt": "2026-09-23T15:00:00.000Z", "completedAt": "2026-09-23T15:00:41.000Z", "model": "claude-opus-5" }
+{ "status": "failed", "error": "Mock service is busy. Try again in a minute." }
+```
+
+`GET /api/meta` includes `features.mocks: true|false` so clients can hide the feature when it is off.
 
 ### List
 
