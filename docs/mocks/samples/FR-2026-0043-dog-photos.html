@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Internal Tools — Dog Photos</title>
+<style>
+  :root{
+    --blue:#2458d6;
+    --ink:#22262b;
+    --mid:#5d646d;
+    --line:#d9dde2;
+    --bg:#f4f5f7;
+    --card:#ffffff;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:14px;
+    line-height:1.45;
+  }
+  /* top bar */
+  .topbar{
+    background:#2b3037;color:#fff;display:flex;align-items:center;gap:20px;
+    padding:0 20px;height:48px;
+  }
+  .logo{display:flex;align-items:center;gap:8px;font-weight:600;letter-spacing:.2px;}
+  .logo .dot{width:16px;height:16px;border-radius:4px;background:var(--blue);display:inline-block;}
+  .topnav{display:flex;gap:18px;font-size:13px;color:#c5cad1;}
+  .topnav span.active{color:#fff;box-shadow:inset 0 -2px 0 var(--blue);padding-bottom:14px;}
+  .who{margin-left:auto;display:flex;align-items:center;gap:8px;font-size:13px;color:#c5cad1;}
+  .avatar{width:26px;height:26px;border-radius:50%;background:#59616b;color:#fff;display:grid;place-items:center;font-size:11px;font-weight:600;}
+
+  .shell{display:flex;align-items:flex-start;gap:0;}
+  /* side nav */
+  .side{width:212px;flex:0 0 212px;background:#fff;border-right:1px solid var(--line);min-height:860px;padding:14px 0;}
+  .side h4{font-size:11px;text-transform:uppercase;letter-spacing:.8px;color:#8a919a;margin:14px 16px 6px;}
+  .side a{display:flex;align-items:center;gap:9px;padding:7px 16px;color:var(--ink);text-decoration:none;font-size:13px;}
+  .side a.sel{background:#eaf0fd;color:var(--blue);font-weight:600;border-left:3px solid var(--blue);padding-left:13px;}
+  .side svg{flex:0 0 15px;}
+
+  main{flex:1;padding:20px 24px 12px;min-width:0;}
+  .crumb{font-size:12px;color:var(--mid);margin-bottom:6px;}
+  .head{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:16px;}
+  h1{font-size:21px;margin:0;}
+  .sub{color:var(--mid);font-size:12.5px;margin-top:3px;}
+  .actions{margin-left:auto;display:flex;gap:8px;}
+  .btn{border:1px solid var(--line);background:#fff;border-radius:5px;padding:7px 13px;font-size:13px;color:var(--ink);display:inline-flex;align-items:center;gap:7px;cursor:default;}
+  .btn.primary{background:var(--blue);border-color:var(--blue);color:#fff;font-weight:600;}
+
+  .cols{display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap;}
+  .left{flex:1 1 640px;min-width:420px;}
+  .right{flex:0 0 288px;max-width:100%;}
+
+  /* upload dropzone */
+  .drop{
+    background:#fff;border:2px dashed #b9c4da;border-radius:8px;padding:18px 20px;
+    display:flex;align-items:center;gap:18px;margin-bottom:8px;
+  }
+  .drop .ic{width:44px;height:44px;border-radius:8px;background:#eaf0fd;display:grid;place-items:center;flex:0 0 44px;}
+  .drop b{display:block;font-size:14px;}
+  .drop small{color:var(--mid);}
+  .uploading{background:#fff;border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin-bottom:16px;display:flex;align-items:center;gap:12px;font-size:12.5px;}
+  .bar{flex:1;height:6px;background:#e7eaee;border-radius:3px;overflow:hidden;}
+  .bar i{display:block;height:100%;width:68%;background:var(--blue);}
+
+  /* filters */
+  .filters{display:flex;gap:8px;align-items:center;margin-bottom:14px;flex-wrap:wrap;}
+  .search{flex:1 1 220px;display:flex;align-items:center;gap:7px;background:#fff;border:1px solid var(--line);border-radius:5px;padding:6px 10px;color:#8a919a;font-size:13px;min-width:180px;}
+  .chip{background:#fff;border:1px solid var(--line);border-radius:14px;padding:4px 11px;font-size:12.5px;color:var(--mid);}
+  .chip.on{background:#eaf0fd;border-color:#bdcef5;color:var(--blue);font-weight:600;}
+  .select{background:#fff;border:1px solid var(--line);border-radius:5px;padding:6px 10px;font-size:12.5px;color:var(--ink);}
+
+  /* gallery */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:14px;}
+  .tile{background:#fff;border:1px solid var(--line);border-radius:8px;overflow:hidden;}
+  .ph{height:126px;position:relative;display:grid;place-items:center;}
+  .ph svg{opacity:.78;}
+  .p1{background:linear-gradient(140deg,#cfd9ea,#a9b8d2);}
+  .p2{background:linear-gradient(140deg,#e2dbcd,#c3b49a);}
+  .p3{background:linear-gradient(140deg,#d2ddd6,#a8bdb1);}
+  .p4{background:linear-gradient(140deg,#e6d6d6,#c6a9a9);}
+  .p5{background:linear-gradient(140deg,#d6d9e6,#b0b6cd);}
+  .p6{background:linear-gradient(140deg,#dfe3c9,#bcc49b);}
+  .fav{position:absolute;top:7px;right:7px;width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.9);display:grid;place-items:center;}
+  .meta{padding:8px 10px;}
+  .meta b{font-size:13px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .meta small{color:var(--mid);font-size:11.5px;}
+  .tags{margin-top:6px;display:flex;gap:4px;flex-wrap:wrap;}
+  .tag{font-size:10.5px;background:#f0f2f5;border:1px solid var(--line);border-radius:10px;padding:1px 7px;color:var(--mid);}
+
+  /* right column */
+  .panel{background:#fff;border:1px solid var(--line);border-radius:8px;margin-bottom:16px;}
+  .panel h3{margin:0;padding:11px 14px;border-bottom:1px solid var(--line);font-size:13px;}
+  .panel .body{padding:12px 14px;}
+  .stat{display:flex;justify-content:space-between;padding:5px 0;font-size:13px;border-bottom:1px dashed #eceff2;}
+  .stat:last-child{border-bottom:0;}
+  .stat span{color:var(--mid);}
+  .albums li{list-style:none;display:flex;justify-content:space-between;padding:6px 0;font-size:13px;border-bottom:1px dashed #eceff2;}
+  .albums{margin:0;padding:0;}
+  .albums li:last-child{border-bottom:0;}
+  .albums em{font-style:normal;color:var(--mid);font-size:12px;}
+
+  .assump{border-color:#bdcef5;}
+  .assump h3{background:#eaf0fd;color:var(--blue);border-bottom-color:#bdcef5;}
+  .assump ol{margin:0;padding-left:18px;}
+  .assump li{font-size:12.5px;margin-bottom:8px;color:#3c434b;}
+  .assump li:last-child{margin-bottom:0;}
+
+  footer{padding:10px 24px 22px;color:#8a919a;font-size:11.5px;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo"><span class="dot"></span> Internal Tools</div>
+  <div class="topnav">
+    <span>Dashboard</span><span>Requests</span><span>Assets</span><span class="active">Dog Photos</span><span>Directory</span>
+  </div>
+  <div class="who">Priya Raman · Marketing <span class="avatar">PR</span></div>
+</div>
+
+<div class="shell">
+  <nav class="side">
+    <h4>Workspace</h4>
+    <a><svg width="15" height="15" viewBox="0 0 16 16"><rect x="1" y="2" width="6" height="5" rx="1" fill="none" stroke="#5d646d"/><rect x="9" y="2" width="6" height="5" rx="1" fill="none" stroke="#5d646d"/><rect x="1" y="9" width="6" height="5" rx="1" fill="none" stroke="#5d646d"/><rect x="9" y="9" width="6" height="5" rx="1" fill="none" stroke="#5d646d"/></svg>Dashboard</a>
+    <a><svg width="15" height="15" viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" rx="2" fill="none" stroke="#5d646d"/><path d="M2 11l3.5-3 3 2.5L11 8l3 3" fill="none" stroke="#5d646d"/></svg>Brand Assets</a>
+    <h4>My Pages</h4>
+    <a class="sel"><svg width="15" height="15" viewBox="0 0 16 16"><path d="M4.2 6.5c0-1.6 1.6-3 3.8-3s3.8 1.4 3.8 3v1.8c0 2-1.7 3.4-3.8 3.4s-3.8-1.4-3.8-3.4z" fill="none" stroke="#2458d6"/><path d="M3 3.4 4.6 5.6M13 3.4 11.4 5.6" stroke="#2458d6" fill="none"/></svg>Dog Photos</a>
+    <a><svg width="15" height="15" viewBox="0 0 16 16"><path d="M2 4h5l1.2 1.6H14V13H2z" fill="none" stroke="#5d646d"/></svg>Albums</a>
+    <a><svg width="15" height="15" viewBox="0 0 16 16"><path d="M8 2.8 9.7 6.3l3.8.5-2.8 2.7.7 3.8L8 11.5l-3.4 1.8.7-3.8L2.5 6.8l3.8-.5z" fill="none" stroke="#5d646d"/></svg>Favourites</a>
+    <a><svg width="15" height="15" viewBox="0 0 16 16"><path d="M3 13V7l5-4 5 4v6z" fill="none" stroke="#5d646d"/></svg>Shared with me</a>
+    <h4>Admin</h4>
+    <a><svg width="15" height="15" viewBox="0 0 16 16"><circle cx="8" cy="8" r="2.4" fill="none" stroke="#5d646d"/><circle cx="8" cy="8" r="5.6" fill="none" stroke="#5d646d"/></svg>Storage settings</a>
+  </nav>
+
+  <main>
+    <div class="crumb">Internal Tools › My Pages › Dog Photos</div>
+    <div class="head">
+      <div>
+        <h1>Dog Photos</h1>
+        <div class="sub">Private page · 3 people with access · 47 photos · 312 MB of 2 GB used</div>
+      </div>
+      <div class="actions">
+        <span class="btn">New album</span>
+        <span class="btn primary"><svg width="13" height="13" viewBox="0 0 16 16"><path d="M8 12V3M8 3 4.6 6.4M8 3l3.4 3.4M3 13h10" stroke="#fff" fill="none" stroke-width="1.6"/></svg>Upload photos</span>
+      </div>
+    </div>
+
+    <div class="cols">
+      <div class="left">
+
+        <div class="drop">
+          <div class="ic">
+            <svg width="22" height="22" viewBox="0 0 16 16"><path d="M8 11V3M8 3 5 6M8 3l3 3" stroke="#2458d6" fill="none" stroke-width="1.5"/><path d="M2.5 10.5V13h11v-2.5" stroke="#2458d6" fill="none" stroke-width="1.5"/></svg>
+          </div>
+          <div>
+            <b>Drag photos here, or click to browse</b>
+            <small>JPG, PNG or HEIC · up to 25 MB each · up to 20 files at a time</small>
+          </div>
+          <span class="btn" style="margin-left:auto">Choose files</span>
+        </div>
+
+        <div class="uploading">
+          <svg width="14" height="14" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6.5" fill="none" stroke="#2458d6"/></svg>
+          <b style="font-weight:600">Uploading&nbsp;</b> beach-day-03.jpg
+          <div class="bar"><i></i></div>
+          <span style="color:#5d646d">2 of 3 · 68%</span>
+        </div>
+
+        <div class="filters">
+          <div class="search">
+            <svg width="13" height="13" viewBox="0 0 16 16"><circle cx="7" cy="7" r="4.5" fill="none" stroke="#8a919a"/><path d="M10.5 10.5 14 14" stroke="#8a919a"/></svg>
+            Search by caption, tag or date
+          </div>
+          <span class="chip on">All photos</span>
+          <span class="chip">Favourites</span>
+          <span class="chip">Murphy</span>
+          <span class="chip">Walks</span>
+          <span class="select">Sort: Newest first ▾</span>
+        </div>
+
+        <div class="grid">
+          <div class="tile">
+            <div class="ph p1">
+              <svg width="54" height="46" viewBox="0 0 60 50"><path d="M14 20c0-7 7-12 16-12s16 5 16 12v8c0 8-7 13-16 13s-16-5-16-13z" fill="#7f8ca6"/><path d="M10 9l6 8M50 9l-6 8" stroke="#7f8ca6" stroke-width="5" stroke-linecap="round"/><circle cx="24" cy="23" r="2.4" fill="#fff"/><circle cx="36" cy="23" r="2.4" fill="#fff"/></svg>
+              <div class="fav"><svg width="12" height="12" viewBox="0 0 16 16"><path d="M8 13.5S2.5 10 2.5 6.2A3.2 3.2 0 0 1 8 4a3.2 3.2 0 0 1 5.5 2.2C13.5 10 8 13.5 8 13.5z" fill="#2458d6"/></svg></div>
+            </div>
+            <div class="meta"><b>Murphy at the park</b><small>14 Feb 2026 · 3.2 MB</small><div class="tags"><span class="tag">Murphy</span><span class="tag">Walks</span></div></div>
+          </div>
+
+          <div class="tile">
+            <div class="ph p2"><svg width="54" height="46" viewBox="0 0 60 50"><path d="M14 20c0-7 7-12 16-12s16 5 16 12v8c0 8-7 13-16 13s-16-5-16-13z" fill="#a08b68"/><path d="M12 12c-3 3-3 8 0 10M48 12c3 3 3 8 0 10" stroke="#a08b68" stroke-width="5" stroke-linecap="round"/><circle cx="24" cy="23" r="2.4" fill="#fff"/><circle cx="36" cy="23" r="2.4" fill="#fff"/></svg></div>
+            <div class="meta"><b>Sleepy Sunday</b><small>11 Feb 2026 · 2.7 MB</small><div class="tags"><span class="tag">Murphy</span><span class="tag">Home</span></div></div>
+          </div>
+
+          <div class="tile">
+            <div class="ph p3">
+              <svg width="54" height="46" viewBox="0 0 60 50"><path d="M14 20c0-7 7-12 16-12s16 5 16 12v8c0 8-7 13-16 13s-16-5-16-13z" fill="#7f9a89"/><path d="M10 9l6 8M50 9l-6 8" stroke="#7f9a89" stroke-width="5" stroke-linecap="round"/><circle cx="24" cy="23" r="2.4" fill="#fff"/><circle cx="36" cy="23" r="2.4" fill="#fff"/></svg>
+              <div class="fav"><svg width="12" height="12" viewBox="0 0 16 16"><path d="M8 13.5S2.5 10 2.5 6.2A3.2 3.2 0 0 1 8 4a3.2 3.2 0 0 1 5.5 2.2C13.5 10 8 13.5 8 13.5z" fill="#2458d6"/></svg></div>
+            </div>
+            <div class="meta"><b>First snow, Highgate</b><small>2 Feb 2026 · 4.1 MB</small><div class="tags"><span class="tag">Murphy</span><span class="tag">Snow</span></div></div>
+          </div>
+
+          <div class="tile">
+            <div class="ph p4"><svg width="54" height="46" viewBox="0 0 60 50"><path d="M14 20c0-7 7-12 16-12s16 5 16 12v8c0 8-7 13-16 13s-16-5-16-13z" fill="#a98484"/><path d="M12 12c-3 3-3 8 0 10M48 12c3 3 3 8 0 10" stroke="#a98484" stroke-width="5" stroke-linecap="round"/><circle cx="24" cy="23" r="2.4" fill="#fff"/><circle cx="36" cy="23" r="2.4" fill="#fff"/></svg></div>
+            <div class="meta"><b>Puppy class graduation</b><small>28 Jan 2026 · 1.9 MB</small><div class="tags"><span class="tag">Murphy</span><span class="tag">Training</span></div></div>
+          </div>
+
+          <div class="tile">
+            <div class="ph p5"><svg width="54" height="46" viewBox="0 0 60 50"><path d="M14 20c0-7 7-12 16-12s16 5 16 12v8c0 8-7 13-16 13s-16-5-16-13z" fill="#8c93ac"/><path d="M10 9l6 8M50 9l-6 8" stroke="#8c93ac" stroke-width="5" stroke-linecap="round"/><circle cx="24" cy="23" r="2.4" fill="#fff"/><circle cx="36" cy="23" r="2.4" fill="#fff"/></svg></div>
+            <div class="meta"><b>Office visit — desk 14</b><small>22 Jan 2026 · 2.2 MB</small><div class="tags"><span class="tag">Office</span></div></div>
+          </div>
+
+          <div class="tile">
+            <div class="ph p6"><svg width="54" height="46" viewBox="0 0 60 50"><path d="M14 20c0-7 7-12 16-12s16 5 16 12v8c0 8-7 13-16 13s-16-5-16-13z" fill="#9aa377"/><path d="M12 12c-3 3-3 8 0 10M48 12c3 3 3 8 0 10" stroke="#9aa377" stroke-width="5" stroke-linecap="round"/><circle cx="24" cy="23" r="2.4" fill="#fff"/><circle cx="36" cy="23" r="2.4" fill="#fff"/></svg></div>
+            <div class="meta"><b>Muddy paws, Heath walk</b><small>19 Jan 2026 · 3.6 MB</small><div class="tags"><span class="tag">Walks</span></div></div>
+          </div>
+        </div>
+
+        <div style="text-align:center;margin:16px 0 4px;">
+          <span class="btn">Load 41 more photos</span>
+        </div>
+      </div>
+
+      <aside class="right">
+        <div class="panel assump">
+          <h3>Assumptions</h3>
+          <div class="body">
+            <ol>
+              <li>This is a <b>personal, private page</b> per user — photos are not visible to the whole company unless explicitly shared.</li>
+              <li>Upload is drag-and-drop or file picker, images only (JPG/PNG/HEIC), max 25 MB per file.</li>
+              <li>Each user gets a <b>2 GB</b> storage quota; no video support in v1.</li>
+              <li>Photos can be captioned and tagged (e.g. dog name, occasion) so they can be searched and filtered.</li>
+              <li>It lives as a new left-nav item in Internal Tools, using existing sign-in — no new permissions needed.</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>This page</h3>
+          <div class="body">
+            <div class="stat"><span>Photos</span><b>47</b></div>
+            <div class="stat"><span>Favourites</span><b>9</b></div>
+            <div class="stat"><span>Storage used</span><b>312 MB / 2 GB</b></div>
+            <div class="stat"><span>Last upload</span><b>Today, 09:41</b></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>Albums</h3>
+          <div class="body">
+            <ul class="albums">
+              <li>Murphy — everyday <em>21</em></li>
+              <li>Walks &amp; parks <em>14</em></li>
+              <li>Puppy days <em>8</em></li>
+              <li>Office visits <em>4</em></li>
+            </ul>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+</div>
+
+<footer>Concept mock generated from request FR-2026-0043. Not a design commitment.</footer>
+</body>
+</html>
