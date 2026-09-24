@@ -5,3 +5,4 @@ data/
 !.env.example
 *.tmp
 .DS_Store
+web/dist/

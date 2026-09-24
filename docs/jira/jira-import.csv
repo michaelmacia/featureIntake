@@ -5,6 +5,7 @@ Issue Id,Parent Id,Issue Type,Summary,Epic Name,Description,Priority,Story Point
 4,,Epic,Quality & Operations,Quality & Operations,"Automated tests, CI, deployment and monitoring so the service can run in production.",High,,MVP,feature-intake,,,
 5,,Epic,Integrations & Notifications,Integrations & Notifications,"SSO, Jira sync, email/Teams notifications and a requester self-service view.",High,,Phase 2,feature-intake,,,
 6,,Epic,AI Concept Mocks,AI Concept Mocks,Every submission gets an AI-generated concept mock UI that the requester and triage can see and refine.,High,,MVP,feature-intake,,,
+7,,Epic,AI-Guided Intake,AI-Guided Intake,"Requesters describe what they need in their own words; an assistant asks follow-ups and builds a complete, structured request with them.",High,,MVP,feature-intake,,,
 100,1,Story,Multi-step intake wizard,,"h4. User story
 As a business user I want the form split into short steps so that I am not overwhelmed and can see my progress.
 
@@ -406,7 +407,83 @@ h4. Definition of done
 * Code reviewed and merged
 * Tests added/updated and passing
 * Docs updated if behaviour changed",Low,2,MVP,feature-intake,observability,ai,
-133,5,Story,Migrate storage to PostgreSQL,,"h4. User story
+133,7,Story,Describe-it-first start screen,,"h4. User story
+As a business user I want to start by describing my problem in my own words so that I do not have to learn the product team’s categories first.
+
+h4. Acceptance criteria
+* / opens with one text box (""What do you need?"") and three example prompts
+* Start is disabled until something is typed
+* A ""Prefer a structured form?"" link goes to /form
+
+h4. Definition of done
+* Code reviewed and merged
+* Tests added/updated and passing
+* Docs updated if behaviour changed",High,2,MVP,feature-intake,frontend,ai,intake
+134,7,Story,Intake assistant turn API,,"h4. User story
+As a developer I want one stateless endpoint per chat turn so that the conversation needs no server-side session.
+
+h4. Acceptance criteria
+* POST /api/assist takes the conversation and current draft; returns reply, merged draft, updated fields, suggestions, missing fields and readiness
+* Claude output is constrained by a JSON schema whose enum fields are the real option lists
+* Every update is re-validated with the shared rules; invalid values are dropped, text truncated to limits
+* Requester text is fenced as data; identity fields are never sent to the model
+* 422 for bad conversations (max 40 messages, 4000 chars each), 502 with a readable message on model failure, 503 when off
+
+h4. Definition of done
+* Code reviewed and merged
+* Tests added/updated and passing
+* Docs updated if behaviour changed",Highest,5,MVP,feature-intake,backend,ai,
+135,7,Story,Guided follow-up questions and suggestions,,"h4. User story
+As a business user I want the assistant to ask me one clear question at a time, with answers I can tap, so that the request becomes specific without effort.
+
+h4. Acceptance criteria
+* Questions follow the priority: problem, value with a number, systems, reach, dollar impact, urgency, then optional details
+* Suggestions offer the real option labels for fixed lists, plus ""Not sure""
+* The assistant never invents facts or numbers; it says when it is guessing a category or system
+* It says when the request is ready and names at most one optional improvement
+
+h4. Definition of done
+* Code reviewed and merged
+* Tests added/updated and passing
+* Docs updated if behaviour changed",High,3,MVP,feature-intake,ai,intake,
+136,7,Story,"Live, editable request panel",,"h4. User story
+As a business user I want to see my request take shape and fix anything myself so that I stay in control of what is submitted.
+
+h4. Acceptance criteria
+* Every field shows its value, a Needed badge or a check, and an Edit link
+* Fields the assistant just changed are highlighted briefly
+* My edits are sent to the assistant and are not overwritten by later turns
+* A completeness meter counts required details; readiness uses validateRequest
+* Name, email and department are entered in the panel and never sent to the model
+
+h4. Definition of done
+* Code reviewed and merged
+* Tests added/updated and passing
+* Docs updated if behaviour changed",High,5,MVP,feature-intake,frontend,intake,
+137,7,Story,Keep the conversation with the request,,"h4. User story
+As a triage PM I want to read how a request took shape so that I understand the requester’s intent.
+
+h4. Acceptance criteria
+* POST /api/requests accepts conversation; it is sanitised and stored as intake.transcript
+* The detail modal shows an expandable ""Intake conversation"" section
+
+h4. Definition of done
+* Code reviewed and merged
+* Tests added/updated and passing
+* Docs updated if behaviour changed",Medium,2,MVP,feature-intake,backend,triage,ai
+138,7,Story,Resilience and fallback,,"h4. User story
+As a requester I want a clear way forward when the assistant fails so that I can still submit my request.
+
+h4. Acceptance criteria
+* Conversation and draft survive a page reload (stored on the device)
+* A failed turn shows the error with Try again
+* Without an API key, / serves the classic form; /form is always available
+
+h4. Definition of done
+* Code reviewed and merged
+* Tests added/updated and passing
+* Docs updated if behaviour changed",Medium,2,MVP,feature-intake,frontend,backend,ai
+139,5,Story,Migrate storage to PostgreSQL,,"h4. User story
 As an operator I want a managed database so that the service can scale beyond one instance and be backed up.
 
 h4. Acceptance criteria

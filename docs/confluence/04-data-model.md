@@ -55,7 +55,7 @@ Each request is one JSON document in `data/requests.json`:
 | urgency | Low, Medium, High, Critical |
 | status | Submitted, In Review, Needs Info, Approved, Rejected, In Delivery, Done |
 
-Enums are defined in `public/js/rules.js` and served by `GET /api/meta`. To change a list, edit that one file.
+Enums are defined in `shared/rules.js` and served by `GET /api/meta`. To change a list, edit that one file.
 
 ## Phase 2: relational model (PostgreSQL)
 

@@ -41,7 +41,7 @@ Feature requests reach the product team through email, chat, hallway conversatio
 
 ## 4. User journeys
 
-1. **Submit.** Priya opens the form, enters her details, describes the problem and value, and picks systems, reach and urgency. She reviews her answers and submits. She receives a reference `FR-2026-0042` and an initial priority band. Within about a minute a **concept mock** of her idea appears below the confirmation. If it misses the point, she types "the approval step should happen in SAP, not Salesforce" and regenerates. Triage sees the same mock, so the first conversation starts from a shared picture.
+1. **Submit.** Priya opens Feature Intake and types what's wrong in two sentences. The assistant drafts a title and problem statement, guesses the systems, and asks how many people are affected, offering the ranges as buttons. Three or four exchanges later every required field in the panel beside the chat is filled; she fixes one wording by hand, adds her name and department, and submits. She receives a reference `FR-2026-0042` and an initial priority band. Within about a minute a **concept mock** of her idea appears below the confirmation. If it misses the point, she types "the approval step should happen in SAP, not Salesforce" and regenerates. Triage sees the same mock, so the first conversation starts from a shared picture.
 2. **Triage.** Jordan filters the board to *Awaiting triage*, sorts by priority, opens the request, sets it to *In Review* and assigns it to himself. If something is missing, he moves it to *Needs Info* with a question.
 3. **Decide.** At the weekly triage meeting the team approves (and links the Jira epic) or rejects (with a reason).
 4. **Report.** Morgan checks the KPI tiles and exports CSV for the quarterly review.
@@ -72,6 +72,10 @@ Feature requests reach the product team through email, chat, hallway conversatio
 | FR-20 | Duplicate detection: suggest similar existing requests while typing the title | Could | Later |
 | FR-21 | After submission, generate an AI concept mock UI of the idea. Show it on the confirmation screen and in triage, labelled as AI-generated and not a commitment | Should | MVP |
 | FR-22 | Requester and triage can regenerate the mock with written feedback. Each regeneration is recorded in history | Should | MVP |
+| FR-23 | AI-guided intake: the requester describes the need in their own words; an assistant asks targeted follow-ups (one topic at a time, with tap-to-answer suggestions) and fills a structured draft live | Must | MVP |
+| FR-24 | Every draft field stays visible and editable during the conversation; the requester's edits win over the assistant's; readiness uses the same validation rules as the form | Must | MVP |
+| FR-25 | The intake conversation is stored with the submitted request and visible to triage | Should | MVP |
+| FR-26 | The classic structured form remains available at /form, and is served at / when the assistant is off | Must | MVP |
 
 ## 6. Non-functional requirements
 

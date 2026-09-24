@@ -1,7 +1,7 @@
 'use strict';
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const Rules = require('../public/js/rules.js');
+const Rules = require('../shared/rules.js');
 const valid = require('../test-data/valid-payload.json');
 const edgeCases = require('../test-data/edge-cases.json');
 const invalidCases = require('../test-data/invalid-payloads.json');

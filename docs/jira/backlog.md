@@ -11,7 +11,8 @@
 | Quality & Operations | MVP | 4 | 10 |
 | Integrations & Notifications | Phase 2 | 6 | 23 |
 | AI Concept Mocks | MVP | 6 | 18 |
-| **Total** | | **34** | **105** |
+| AI-Guided Intake | MVP | 6 | 19 |
+| **Total** | | **40** | **124** |
 
 ## Intake Form _(MVP)_
 
@@ -449,3 +450,83 @@ Every submission gets an AI-generated concept mock UI that the requester and tri
 - [ ] Token usage and duration are logged per mock
 - [ ] Weekly count of generated, regenerated and failed mocks
 - [ ] Sample 20 mocks a month for a quality review; tune MOCK_EFFORT or the prompt
+
+## AI-Guided Intake _(MVP)_
+
+Requesters describe what they need in their own words; an assistant asks follow-ups and builds a complete, structured request with them.
+
+### Describe-it-first start screen
+
+**Priority:** High · **Points:** 2 · **Labels:** frontend, ai, intake
+
+> As a business user I want to start by describing my problem in my own words so that I do not have to learn the product team’s categories first.
+
+**Acceptance criteria**
+
+- [ ] / opens with one text box ("What do you need?") and three example prompts
+- [ ] Start is disabled until something is typed
+- [ ] A "Prefer a structured form?" link goes to /form
+
+### Intake assistant turn API
+
+**Priority:** Highest · **Points:** 5 · **Labels:** backend, ai
+
+> As a developer I want one stateless endpoint per chat turn so that the conversation needs no server-side session.
+
+**Acceptance criteria**
+
+- [ ] POST /api/assist takes the conversation and current draft; returns reply, merged draft, updated fields, suggestions, missing fields and readiness
+- [ ] Claude output is constrained by a JSON schema whose enum fields are the real option lists
+- [ ] Every update is re-validated with the shared rules; invalid values are dropped, text truncated to limits
+- [ ] Requester text is fenced as data; identity fields are never sent to the model
+- [ ] 422 for bad conversations (max 40 messages, 4000 chars each), 502 with a readable message on model failure, 503 when off
+
+### Guided follow-up questions and suggestions
+
+**Priority:** High · **Points:** 3 · **Labels:** ai, intake
+
+> As a business user I want the assistant to ask me one clear question at a time, with answers I can tap, so that the request becomes specific without effort.
+
+**Acceptance criteria**
+
+- [ ] Questions follow the priority: problem, value with a number, systems, reach, dollar impact, urgency, then optional details
+- [ ] Suggestions offer the real option labels for fixed lists, plus "Not sure"
+- [ ] The assistant never invents facts or numbers; it says when it is guessing a category or system
+- [ ] It says when the request is ready and names at most one optional improvement
+
+### Live, editable request panel
+
+**Priority:** High · **Points:** 5 · **Labels:** frontend, intake
+
+> As a business user I want to see my request take shape and fix anything myself so that I stay in control of what is submitted.
+
+**Acceptance criteria**
+
+- [ ] Every field shows its value, a Needed badge or a check, and an Edit link
+- [ ] Fields the assistant just changed are highlighted briefly
+- [ ] My edits are sent to the assistant and are not overwritten by later turns
+- [ ] A completeness meter counts required details; readiness uses validateRequest
+- [ ] Name, email and department are entered in the panel and never sent to the model
+
+### Keep the conversation with the request
+
+**Priority:** Medium · **Points:** 2 · **Labels:** backend, triage, ai
+
+> As a triage PM I want to read how a request took shape so that I understand the requester’s intent.
+
+**Acceptance criteria**
+
+- [ ] POST /api/requests accepts conversation; it is sanitised and stored as intake.transcript
+- [ ] The detail modal shows an expandable "Intake conversation" section
+
+### Resilience and fallback
+
+**Priority:** Medium · **Points:** 2 · **Labels:** frontend, backend, ai
+
+> As a requester I want a clear way forward when the assistant fails so that I can still submit my request.
+
+**Acceptance criteria**
+
+- [ ] Conversation and draft survive a page reload (stored on the device)
+- [ ] A failed turn shows the error with Try again
+- [ ] Without an API key, / serves the classic form; /form is always available

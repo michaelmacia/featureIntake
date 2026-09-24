@@ -21,9 +21,39 @@ Base URL (local): `http://localhost:3000`. The machine-readable contract is `doc
 | GET | `/api/requests/{id}` | One request |
 | PATCH | `/api/requests/{id}` | Triage update: status, assignee, jiraKey, note |
 | POST | `/api/requests/{id}/comments` | Add a comment |
+| POST | `/api/assist` | One intake-assistant turn: `{ messages, draft }` in; reply, merged draft, suggestions and readiness out. `503` when the assistant is off |
 | GET | `/api/requests/{id}/mock` | Concept mock status: `disabled`, `none`, `pending`, `ready` or `failed` |
 | POST | `/api/requests/{id}/mock` | Regenerate the mock, optionally with `{ "feedback": "…", "actor": "…" }`. Returns `202`; `409` if one is already pending; `503` if mocks are off |
 | GET | `/api/requests/{id}/mock.html` | The generated mock page. Sandboxed CSP, so embed it only in `<iframe sandbox>`. `404` until ready |
+
+### Intake assistant
+
+```http
+POST /api/assist
+Content-Type: application/json
+
+{
+  "messages": [{ "role": "user", "content": "Managers can only approve invoices at their desk in SAP." }],
+  "draft": { "title": "", "problem": "", "affectedSystems": [] }
+}
+```
+
+```json
+{
+  "reply": "Thanks, that's clear. Roughly how many managers approve invoices?",
+  "draft": { "title": "Approve invoices from mobile", "problem": "Managers can only approve invoices at their desk in SAP…", "affectedSystems": ["SAP", "Mobile App"], "...": "…" },
+  "updated": ["title", "problem", "affectedSystems", "category"],
+  "suggestions": ["1-10", "11-50", "51-250", "251-1000", "Not sure"],
+  "missing": [{ "field": "businessValue", "message": "Business value is required." }],
+  "ready": false,
+  "estimate": null
+}
+```
+
+- The client owns the conversation: send every message so far (starting and ending with a `user` message, max 40, each up to 4000 characters) and the current draft, including the requester's own edits.
+- `draft` contains content fields only. Identity fields are ignored and never sent to the model.
+- Errors: `422` for a malformed or over-long conversation, `502` with a readable message when the model call fails, `503` when the assistant is off.
+- To keep the conversation with the request, include it as `conversation` in `POST /api/requests`. It is stored as `intake: { mode: "assistant", transcript }`.
 
 ### Concept mocks
 
@@ -128,12 +158,13 @@ Rules:
 
 | Status | When | Body |
 |---|---|---|
-| 400 | Malformed JSON | `{ "error": "Malformed JSON." }` |
+| 400 | Malformed JSON or malformed URL encoding | `{ "error": "Malformed JSON." }` |
 | 404 | Unknown route or request ID | `{ "error": "Request not found." }` |
 | 405 | Wrong method | `{ "error": "Method not allowed." }` |
 | 413 | Body > 100 KB | `{ "error": "Request body too large." }` |
-| 415 | Not `application/json` | `{ "error": "Content-Type must be application/json." }` |
+| 415 | Media type is not exactly `application/json` (parameters like `charset` are fine) | `{ "error": "Content-Type must be application/json." }` |
 | 422 | Validation or workflow rule failed | `{ "error": "Validation failed.", "fields": { "title": "Request title must be at least 5 characters." } }` |
+| 429 | Too many Claude-backed calls from this client (`/api/assist`; submissions and mock regenerations when mocks are on). Honour `Retry-After` | `{ "error": "Too many requests. Please wait a moment and try again." }` |
 | 500 | Unexpected | `{ "error": "Internal server error." }` |
 
 ## Try it

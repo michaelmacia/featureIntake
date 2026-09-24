@@ -11,13 +11,13 @@
 
 ## 1. Summary
 
-Feature Intake is a small web application with two surfaces: an **intake form** that business users fill in, and a **triage board** where product managers review, score and route requests. The MVP is a single Node.js process with no third-party runtime dependencies. It serves static HTML/CSS/JS and a JSON REST API, and keeps its data in a JSON file. Phase 2 adds SSO, a managed PostgreSQL database, Jira sync and notifications without changing the API contract.
+Feature Intake is a small web application with two surfaces: an **intake form** that business users fill in, and a **triage board** where product managers review, score and route requests. The MVP is a single Node.js process that serves a JSON REST API and the built React front end, and keeps its data in a JSON file. The front end is React 18 on Lowe's Backyard design system, built with Vite. The server uses Node built-ins plus the Anthropic SDK (for concept mocks). Phase 2 adds SSO, a managed PostgreSQL database, Jira sync and notifications without changing the API contract.
 
 **Design principles**
 
-1. **One set of rules.** Validation, enums, scoring and workflow live in a single module (`public/js/rules.js`) that runs in the browser and on the server, so the two cannot drift apart.
+1. **One set of rules.** Validation, enums, scoring and workflow live in a single module (`shared/rules.js`, an ES module) that the React app imports and the server `require`s, so the two cannot drift apart.
 2. **The server is authoritative.** The client validates for a better experience; the server re-validates everything and owns IDs, status, score and history.
-3. **Boring and replaceable.** Zero dependencies, a repository interface around storage, and an OpenAPI contract, so any layer can be swapped.
+3. **Boring and replaceable.** A minimal server, a repository interface around storage, an OpenAPI contract, and a front end built from company design-system components, so any layer can be swapped.
 4. **Auditable by default.** Every status and field change is appended to the request's history with who did it and when.
 
 ## 2. System context
@@ -49,18 +49,18 @@ flowchart LR
 ```mermaid
 flowchart TB
   subgraph Browser
-    FORM[index.html + intake.js<br/>multi-step wizard, drafts]
-    BOARD[requests.html + board.js<br/>filters, KPIs, detail dialog]
-    RULES_C[rules.js<br/>shared validation · scoring · workflow]
+    FORM[IntakePage.jsx<br/>Backyard ProgressStepper wizard, drafts]
+    BOARD[BoardPage.jsx + RequestDetail.jsx<br/>Backyard Table, filters, KPIs, Modal]
+    RULES_C[shared/rules.js<br/>shared validation · scoring · workflow]
     FORM --> RULES_C
     BOARD --> RULES_C
   end
 
   subgraph Node["Node.js process (server/)"]
     HTTP[app.js<br/>router · JSON parsing · security headers]
-    STATIC[static file handler<br/>path-traversal guard]
+    STATIC[static handler for web/dist<br/>SPA fallback · path-traversal guard]
     API[API handlers<br/>requests · stats · meta · export]
-    RULES_S[rules.js<br/>same module, required on server]
+    RULES_S[shared/rules.js<br/>same module, required on server]
     STORE[store.js<br/>repository · atomic writes · ID sequence]
     HTTP --> STATIC
     HTTP --> API
@@ -72,15 +72,18 @@ flowchart TB
 
   FORM -- "fetch /api/*" --> HTTP
   BOARD -- "fetch /api/*" --> HTTP
-  Browser -- "GET /, /requests, /js, /css" --> STATIC
+  Browser -- "GET /, /requests, /assets/*" --> STATIC
   STORE -- "write tmp + rename" --> FILE
 ```
 
 | Component | Responsibility | Key file |
 |---|---|---|
-| Intake wizard | 4-step form, per-step validation, localStorage drafts, review, confirmation | `public/index.html`, `public/js/intake.js` |
-| Triage board | KPIs, filter/search/sort, detail dialog, workflow actions, CSV export link | `public/requests.html`, `public/js/board.js` |
-| Rules | Enums, field limits, `validateRequest`, `computePriority`, `canTransition` | `public/js/rules.js` |
+| Intake wizard | 4-step form (Backyard `ProgressStepper`, `TextField`, `Select`, `TextArea`, `Chip`, `Checkbox`, `Alert`), per-step validation, localStorage drafts, review, confirmation | `web/src/pages/IntakePage.jsx` |
+| Triage board | KPIs, filter/search/sort (Backyard `Search`, `Select`, `Table`), detail and workflow actions in a Backyard `Modal`, CSV export | `web/src/pages/BoardPage.jsx`, `RequestDetail.jsx` |
+| AI-guided intake | Chat, suggestion buttons, live editable draft, completeness meter, submit | `web/src/pages/AssistantIntake.jsx`, `web/src/components/DraftPanel.jsx` |
+| Intake assistant | One Claude turn per message: structured output, sanitise and merge updates, assess readiness | `server/assistant.js` |
+| Concept mock viewer | Polls mock status, scaled sandboxed iframe, regenerate with feedback | `web/src/components/ConceptMock.jsx` |
+| Rules | Enums, field limits, `validateRequest`, `computePriority`, `canTransition` | `shared/rules.js` |
 | HTTP/API | Routing, body limits (100 KB), content-type checks, error mapping, CSV | `server/app.js` |
 | Store | In-memory list + serialized atomic file writes; sequential IDs | `server/store.js` |
 | Mock service | Background queue that asks Claude for a concept mock per request; sanitises and stores the HTML | `server/mockgen.js` |
@@ -145,7 +148,37 @@ sequenceDiagram
   Q->>N: Notify requester "Approved — tracked as FEAT-123"
 ```
 
-### 4.3 Concept mock generation
+### 4.3 AI-guided intake
+
+```mermaid
+sequenceDiagram
+  autonumber
+  actor U as Requester
+  participant W as Browser (AssistantIntake + DraftPanel)
+  participant A as API /api/assist
+  participant IA as IntakeAssistant
+  participant C as Claude API (claude-opus-5, effort low)
+  U->>W: Describes the need in their own words
+  W->>A: POST /api/assist {messages, draft}
+  A->>IA: respond()
+  IA->>IA: check conversation limits, normalise draft
+  IA->>C: system rules + fenced requester messages + current draft (structured output schema)
+  C-->>IA: {reply, updates, suggestions}
+  IA->>IA: sanitise updates with shared rules, merge, assess what is missing
+  IA-->>W: reply, merged draft, updated fields, suggestions, missing, estimate
+  W-->>U: Assistant message, highlighted fields, suggestion buttons
+  U->>W: Taps a suggestion, answers, or edits a field directly
+  Note over W,A: Repeat until the draft passes validateRequest, then the user adds name, email and department
+  U->>W: Submit
+  W->>A: POST /api/requests {fields, conversation}
+```
+
+- **Stateless turns.** The browser holds the conversation and draft (and keeps them in localStorage); each turn resends both. Nothing is stored server-side until submission, when the sanitised transcript is saved as `intake.transcript`.
+- **The model proposes, the rules decide.** Claude returns a JSON object constrained by a schema whose enum fields list the real option values. The server still drops any value that fails the shared rules (unknown option, past date, wrong type) and truncates text to field limits. Readiness is `validateRequest`, the same function the form and the API use.
+- **Requester edits win.** The draft sent each turn includes manual edits; the prompt tells Claude not to overwrite them, and the browser applies only the fields Claude changed in that turn, so edits made while it was thinking survive.
+- **Trust boundary.** Requester text is wrapped in `<requester_message>` and described to the model as data. Identity fields are entered outside the chat and never sent. Conversation limits: 40 messages, 4000 characters each.
+
+### 4.4 Concept mock generation
 
 ```mermaid
 sequenceDiagram
@@ -260,7 +293,7 @@ Changes from MVP:
 ```mermaid
 flowchart TB
   DEV[Developer] -->|PR| GH[Git repository]
-  GH -->|on PR| CI[CI: npm test on Node 20 and 22]
+  GH -->|on PR| CI[CI: npm test + npm run build on Node 22]
   CI -->|main branch| BUILD[Build container image<br/>non-root, node:22-alpine]
   BUILD --> REG[(Container registry)]
   REG --> STG[Staging<br/>seeded with test-data/seed.json]
@@ -282,7 +315,8 @@ flowchart TB
 - CSP `default-src 'self'`, no inline script or style, `frame-ancestors 'none'`, `nosniff`, `Referrer-Policy: same-origin`.
 - All user text reaches the DOM through `textContent`, never `innerHTML`.
 - Body size limit of 100 KB; JSON only (415 otherwise); control characters stripped.
-- Static handler normalises paths and refuses anything outside `public/`.
+- Static handler normalises paths and refuses anything outside `web/dist/`. Unknown extension-less paths get `index.html` (client-side routing); missing files with an extension are 404.
+- `style-src` allows `'unsafe-inline'` because Backyard is built on styled-components, which injects `<style>` tags at runtime. `script-src` stays `'self'` only.
 - CSV export prefixes cells starting with `= + - @` to block spreadsheet formula injection.
 - **MVP gap:** no authentication. Deploy behind VPN/SSO proxy until Phase 2 (see decision ADR-004).
 
