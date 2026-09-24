@@ -1,6 +1,6 @@
 flowchart TB
   DEV[Developer] -->|PR| GH[Git repository]
-  GH -->|on PR| CI[CI: npm test on Node 20 and 22]
+  GH -->|on PR| CI[CI: npm test + npm run build on Node 22]
   CI -->|main branch| BUILD[Build container image<br/>non-root, node:22-alpine]
   BUILD --> REG[(Container registry)]
   REG --> STG[Staging<br/>seeded with test-data/seed.json]

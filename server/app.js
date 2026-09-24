@@ -5,9 +5,10 @@
 const http = require('node:http');
 const fs = require('node:fs');
 const path = require('node:path');
-const Rules = require('../public/js/rules.js');
+const Rules = require('../shared/rules.js');
+const { sanitizeTranscript } = require('./assistant');
 
-const PUBLIC_DIR = path.join(__dirname, '..', 'public');
+const DEFAULT_STATIC_DIR = path.join(__dirname, '..', 'web', 'dist');
 const MAX_BODY_BYTES = 100 * 1024;
 const MIME = {
   '.html': 'text/html; charset=utf-8',
@@ -16,20 +17,55 @@ const MIME = {
   '.svg': 'image/svg+xml',
   '.json': 'application/json; charset=utf-8',
   '.ico': 'image/x-icon',
+  '.png': 'image/png',
+  '.woff': 'font/woff',
+  '.woff2': 'font/woff2',
+  '.map': 'application/json; charset=utf-8',
 };
 const SECURITY_HEADERS = {
   'X-Content-Type-Options': 'nosniff',
   'X-Frame-Options': 'DENY',
   'Referrer-Policy': 'same-origin',
-  'Content-Security-Policy': "default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; frame-ancestors 'none'",
+  // style-src needs 'unsafe-inline' because Backyard components are styled with styled-components,
+  // which injects <style> tags at runtime. Scripts stay locked to same-origin files.
+  'Content-Security-Policy': "default-src 'self'; img-src 'self' data:; font-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; frame-ancestors 'none'",
 };
 
 class HttpError extends Error {
-  constructor(status, message, details) {
+  constructor(status, message, details, headers) {
     super(message);
     this.status = status;
     this.details = details;
+    this.headers = headers;
   }
+}
+
+// Claude-backed endpoints cost money per call, so each client IP gets a fixed-window budget.
+// The socket address is used, not X-Forwarded-For, which any client can set.
+const DEFAULT_RATE_LIMITS = {
+  assist: { max: 30, windowMs: 60 * 1000 }, // one call per chat turn
+  mocks: { max: 10, windowMs: 10 * 60 * 1000 }, // submissions (which queue a mock) and regenerations
+};
+
+function createRateLimiter(limits) {
+  const hits = new Map();
+  return function check(bucket, key, nowMs = Date.now()) {
+    const limit = limits && limits[bucket];
+    if (!limit) return;
+    if (hits.size > 10000) for (const [k, v] of hits) if (v.reset <= nowMs) hits.delete(k);
+    const id = `${bucket}|${key}`;
+    let entry = hits.get(id);
+    if (!entry || entry.reset <= nowMs) { entry = { count: 0, reset: nowMs + limit.windowMs }; hits.set(id, entry); }
+    entry.count += 1;
+    if (entry.count > limit.max) {
+      const retry = Math.ceil((entry.reset - nowMs) / 1000);
+      throw new HttpError(429, 'Too many requests. Please wait a moment and try again.', undefined, { 'Retry-After': String(retry) });
+    }
+  };
+}
+
+function decodePath(s) {
+  try { return decodeURIComponent(s); } catch { throw new HttpError(400, 'Malformed URL.'); }
 }
 
 function send(res, status, body, headers = {}) {
@@ -46,8 +82,10 @@ function send(res, status, body, headers = {}) {
 
 function readJson(req) {
   return new Promise((resolve, reject) => {
-    const type = req.headers['content-type'] || '';
-    if (!type.includes('application/json')) return reject(new HttpError(415, 'Content-Type must be application/json.'));
+    // Compare the exact media type. A substring match would accept "text/plain; a=application/json",
+    // which browsers send cross-site without a CORS preflight, opening every POST to CSRF.
+    const type = String(req.headers['content-type'] || '').split(';')[0].trim().toLowerCase();
+    if (type !== 'application/json') return reject(new HttpError(415, 'Content-Type must be application/json.'));
     let size = 0;
     const chunks = [];
     req.on('data', (c) => {
@@ -140,19 +178,35 @@ function mockStatus(record, mocks) {
   return record.mock || { status: 'none' };
 }
 
-function createApp({ store, now = () => new Date(), mocks }) {
+function createApp({ store, now = () => new Date(), mocks, assistant, staticDir = DEFAULT_STATIC_DIR, rateLimits = DEFAULT_RATE_LIMITS }) {
+  staticDir = path.resolve(staticDir);
+  const limit = createRateLimiter(rateLimits);
   async function handleApi(req, res, url) {
     const parts = url.pathname.split('/').filter(Boolean); // ['api', ...]
     const method = req.method;
+    const client = req.socket.remoteAddress || 'unknown';
 
     if (parts[1] === 'health' && method === 'GET') return send(res, 200, { status: 'ok', requests: store.list().length });
     if (parts[1] === 'meta' && method === 'GET') {
       return send(res, 200, {
         enums: Rules.ENUMS, transitions: Rules.TRANSITIONS, limits: Rules.TEXT_LIMITS,
-        features: { mocks: Boolean(mocks && mocks.enabled) },
+        features: { mocks: Boolean(mocks && mocks.enabled), assistant: Boolean(assistant && assistant.enabled) },
       });
     }
     if (parts[1] === 'stats' && method === 'GET') return send(res, 200, summarize(store.list()));
+
+    // Conversational intake: one assistant turn. Stateless; nothing is stored until the request is submitted.
+    if (parts[1] === 'assist' && parts.length === 2) {
+      if (method !== 'POST') throw new HttpError(405, 'Method not allowed.');
+      if (!assistant || !assistant.enabled) throw new HttpError(503, 'The intake assistant is not enabled on this server. Use the form at /form.');
+      limit('assist', client);
+      const body = await readJson(req);
+      try {
+        return send(res, 200, await assistant.respond({ messages: body.messages, draft: body.draft }));
+      } catch (err) {
+        throw new HttpError(err.status || 500, err.message);
+      }
+    }
 
     if (parts[1] !== 'requests') throw new HttpError(404, 'Not found.');
 
@@ -165,6 +219,7 @@ function createApp({ store, now = () => new Date(), mocks }) {
         const body = await readJson(req);
         const { valid, errors, value } = Rules.validateRequest(body, { today: now().toISOString().slice(0, 10) });
         if (!valid) throw new HttpError(422, 'Validation failed.', errors);
+        if (mocks && mocks.enabled) limit('mocks', client);
         const ts = now().toISOString();
         const { score, band } = Rules.computePriority(value);
         const record = {
@@ -180,6 +235,9 @@ function createApp({ store, now = () => new Date(), mocks }) {
           history: [{ at: ts, actor: value.requesterName, type: 'status', from: null, to: 'Submitted' }],
           comments: [],
         };
+        // Requests built with the assistant keep the conversation so triage can see how the request took shape.
+        const transcript = sanitizeTranscript(body.conversation);
+        if (transcript) record.intake = { mode: 'assistant', transcript };
         if (mocks && mocks.enabled) mocks.request(record);
         await store.insert(record);
         return send(res, 201, record, { Location: `/api/requests/${record.id}` });
@@ -197,7 +255,7 @@ function createApp({ store, now = () => new Date(), mocks }) {
       return res.end('﻿' + toCsv(rows));
     }
 
-    const record = store.get(decodeURIComponent(parts[2]));
+    const record = store.get(decodePath(parts[2]));
     if (!record) throw new HttpError(404, 'Request not found.');
 
     if (parts.length === 3) {
@@ -249,6 +307,7 @@ function createApp({ store, now = () => new Date(), mocks }) {
       if (method === 'POST') {
         if (!mocks || !mocks.enabled) throw new HttpError(503, 'Mock generation is not enabled on this server.');
         if (record.mock && record.mock.status === 'pending') throw new HttpError(409, 'A mock is already being generated.');
+        limit('mocks', client);
         const body = await readJson(req);
         const feedback = typeof body.feedback === 'string' ? body.feedback.trim().slice(0, 1000) : '';
         mocks.request(record, feedback || undefined);
@@ -282,16 +341,26 @@ function createApp({ store, now = () => new Date(), mocks }) {
     throw new HttpError(404, 'Not found.');
   }
 
+  // Serves the built React app. Real files are served as-is; any other extension-less
+  // path (/, /requests, …) gets index.html so client-side routing can take over.
   function serveStatic(req, res, url) {
     if (req.method !== 'GET' && req.method !== 'HEAD') throw new HttpError(405, 'Method not allowed.');
-    let rel = decodeURIComponent(url.pathname);
-    if (rel === '/') rel = '/index.html';
-    if (rel === '/requests') rel = '/requests.html';
-    const file = path.normalize(path.join(PUBLIC_DIR, rel));
-    if (!file.startsWith(PUBLIC_DIR + path.sep)) throw new HttpError(403, 'Forbidden.');
-    fs.readFile(file, (err, buf) => {
-      if (err) return send(res, 404, 'Not found');
-      res.writeHead(200, { ...SECURITY_HEADERS, 'Content-Type': MIME[path.extname(file)] || 'application/octet-stream' });
+    const rel = decodePath(url.pathname);
+    const file = path.normalize(path.join(staticDir, rel));
+    if (!file.startsWith(staticDir + path.sep) && file !== staticDir) throw new HttpError(403, 'Forbidden.');
+    const isAsset = path.extname(rel) !== '';
+    const target = isAsset ? file : path.join(staticDir, 'index.html');
+    fs.readFile(target, (err, buf) => {
+      if (err) {
+        if (!isAsset) return send(res, 503, 'The web app has not been built yet. Run "npm run build", or use "npm run dev" during development.');
+        return send(res, 404, 'Not found');
+      }
+      res.writeHead(200, {
+        ...SECURITY_HEADERS,
+        'Content-Type': MIME[path.extname(target)] || 'application/octet-stream',
+        // Vite fingerprints files under /assets, so they can be cached forever; index.html must not be.
+        'Cache-Control': rel.startsWith('/assets/') ? 'public, max-age=31536000, immutable' : 'no-cache',
+      });
       res.end(req.method === 'HEAD' ? undefined : buf);
     });
   }
@@ -303,7 +372,7 @@ function createApp({ store, now = () => new Date(), mocks }) {
       else serveStatic(req, res, url);
     } catch (err) {
       if (err instanceof HttpError) {
-        if (!res.headersSent) send(res, err.status, { error: err.message, ...(err.details ? { fields: err.details } : {}) });
+        if (!res.headersSent) send(res, err.status, { error: err.message, ...(err.details ? { fields: err.details } : {}) }, err.headers);
       } else {
         console.error(err);
         if (!res.headersSent) send(res, 500, { error: 'Internal server error.' });
@@ -312,4 +381,4 @@ function createApp({ store, now = () => new Date(), mocks }) {
   });
 }
 
-module.exports = { createApp, toCsv, filterRequests, summarize };
+module.exports = { createApp, toCsv, filterRequests, summarize, createRateLimiter, DEFAULT_RATE_LIMITS };

@@ -119,6 +119,7 @@ paths:
         '413': { $ref: '#/components/responses/Error' }
         '415': { $ref: '#/components/responses/Error' }
         '422': { $ref: '#/components/responses/ValidationError' }
+        '429': { $ref: '#/components/responses/Error' }
   /api/requests/export.csv:
     get:
       tags: [Requests]
@@ -168,6 +169,50 @@ paths:
               schema: { $ref: '#/components/schemas/FeatureRequest' }
         '404': { $ref: '#/components/responses/Error' }
         '422': { $ref: '#/components/responses/ValidationError' }
+  /api/assist:
+    post:
+      tags: [Requests]
+      summary: One intake-assistant turn
+      description: |
+        Stateless: send the whole conversation so far and the current draft (content fields only).
+        Claude replies with structured output; the server sanitises field updates with the shared rules before merging.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [messages]
+              properties:
+                messages:
+                  type: array
+                  maxItems: 40
+                  items:
+                    type: object
+                    required: [role, content]
+                    properties:
+                      role: { type: string, enum: [user, assistant] }
+                      content: { type: string, maxLength: 4000 }
+                draft: { type: object, description: Current draft content fields, including the requester's own edits }
+      responses:
+        '200':
+          description: The assistant's reply and the merged draft
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reply: { type: string }
+                  draft: { type: object }
+                  updated: { type: array, items: { type: string } }
+                  suggestions: { type: array, maxItems: 6, items: { type: string } }
+                  missing: { type: array, items: { type: object, properties: { field: { type: string }, message: { type: string } } } }
+                  ready: { type: boolean }
+                  estimate: { type: object, nullable: true, properties: { score: { type: integer }, band: { type: string } } }
+        '422': { $ref: '#/components/responses/Error' }
+        '429': { $ref: '#/components/responses/Error' }
+        '502': { $ref: '#/components/responses/Error' }
+        '503': { $ref: '#/components/responses/Error' }
   /api/requests/{id}/mock:
     parameters:
       - { name: id, in: path, required: true, schema: { type: string } }
@@ -199,6 +244,7 @@ paths:
             application/json:
               schema: { $ref: '#/components/schemas/MockStatus' }
         '409': { $ref: '#/components/responses/Error' }
+        '429': { $ref: '#/components/responses/Error' }
         '503': { $ref: '#/components/responses/Error' }
   /api/requests/{id}/mock.html:
     parameters:

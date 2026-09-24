@@ -1,0 +1,20 @@
+sequenceDiagram
+  autonumber
+  actor U as Requester
+  participant W as Browser (AssistantIntake + DraftPanel)
+  participant A as API /api/assist
+  participant IA as IntakeAssistant
+  participant C as Claude API (claude-opus-5, effort low)
+  U->>W: Describes the need in their own words
+  W->>A: POST /api/assist {messages, draft}
+  A->>IA: respond()
+  IA->>IA: check conversation limits, normalise draft
+  IA->>C: system rules + fenced requester messages + current draft (structured output schema)
+  C-->>IA: {reply, updates, suggestions}
+  IA->>IA: sanitise updates with shared rules, merge, assess what is missing
+  IA-->>W: reply, merged draft, updated fields, suggestions, missing, estimate
+  W-->>U: Assistant message, highlighted fields, suggestion buttons
+  U->>W: Taps a suggestion, answers, or edits a field directly
+  Note over W,A: Repeat until the draft passes validateRequest, then the user adds name, email and department
+  U->>W: Submit
+  W->>A: POST /api/requests {fields, conversation}

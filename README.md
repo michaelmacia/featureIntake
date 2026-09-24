@@ -1,12 +1,28 @@
 # Feature Intake
 
-An intake form where business users submit feature requests, and a triage board where product teams review, score and route them. After each submission, Claude sketches a **concept mock UI** of the idea. The requester sees it on the confirmation screen, and triage sees it on the board. Either can regenerate it with feedback.
+An AI-guided intake where business users describe a feature request in their own words, and a triage board where product teams review, score and route requests.
+
+- **Describe it, don't fill it in.** The requester explains the problem in plain language. Claude asks a few targeted follow-up questions, with tap-to-answer suggestions, and builds a complete, structured request in a live panel beside the chat. Every field stays editable, and the same validation rules as the form decide when it's ready to submit.
+- **See it.** After submission, Claude sketches a **concept mock UI** of the idea. The requester sees it on the confirmation screen and triage sees it on the board. Either can regenerate it with feedback.
+- **No AI? No problem.** Without an API key, `/` serves the classic 4-step form, which is also always available at `/form`.
 
 ![Triage board](docs/mocks/screenshots/triage-board.png)
 
 ## Screenshots
 
-| Intake form | Request detail and triage |
+### AI-guided intake
+
+| Describe it in your own words | The assistant asks follow-ups and fills the request live |
+|---|---|
+| ![Start screen: a single text box asking "What do you need?" with example prompts](docs/mocks/screenshots/assistant-start.png) | ![Chat on the left, a live structured request on the right with fields marked done or Needed](docs/mocks/screenshots/assistant-conversation.png) |
+
+![The finished request: every required field filled, a P2 priority estimate, and the requester's details, ready to submit](docs/mocks/screenshots/assistant-ready.png)
+
+*The conversation in these screenshots was scripted with a stand-in for Claude so the images are reproducible; the UI is the real app.*
+
+### Classic form and triage
+
+| Intake form (`/form`) | Request detail and triage |
 |---|---|
 | ![Step 1 of the 4-step intake wizard](docs/mocks/screenshots/intake-step1.png) | ![Request detail dialog with status, owner, Jira key and activity](docs/mocks/screenshots/request-detail.png) |
 
@@ -31,25 +47,34 @@ The generated page is in [`docs/mocks/samples/FR-2026-0043-dog-photos.html`](doc
 
 ## Quick start
 
+Requires Node.js 22.12 or later. The front end is React 18 built with Vite and styled with [Backyard](https://github.com/lowes/backyard-design-system), Lowe's open-source design system (`@lowes-tech/bds-react`, `bds-tokens`, `bds-icons`).
+
 ```bash
-npm install                          # one dependency: @anthropic-ai/sdk (only used for concept mocks)
+npm install                          # server: @anthropic-ai/sdk; front end: React, Vite, Backyard
 export ANTHROPIC_API_KEY=sk-ant-...  # optional: turns on concept mocks
 npm run seed   # optional: load 40 demo requests
-npm start      # http://localhost:3000  (form)   http://localhost:3000/requests  (triage board)
-npm test       # 52 unit + API tests (no network; the Claude API is faked)
+
+npm run dev    # development: API on :3000 + Vite on http://localhost:5173 (hot reload, /api proxied)
+
+npm run build  # production: builds the React app into web/dist
+npm start      # serves API + built app on http://localhost:3000  (form)  and  /requests  (triage board)
+
+npm test       # 67 server tests: rules, API, intake assistant, concept mocks (no network; the Claude API is faked)
 ```
 
 ## What's here
 
 | Path | Contents |
 |---|---|
-| `public/` | Front end: `index.html` (4-step intake wizard), `requests.html` (triage board), `js/rules.js` (validation, scoring and workflow, shared with the server) |
-| `server/` | Node HTTP server: `app.js` (API + static files), `store.js` (atomic JSON persistence), `mockgen.js` (Claude concept-mock generation queue), `seed.js` |
-| `tests/` | `node:test` suites for rules, API and concept mocks |
+| `web/` | React front end (Vite). `src/pages/AssistantIntake.jsx` + `src/components/DraftPanel.jsx` (AI-guided intake), `src/pages/IntakePage.jsx` (classic 4-step form), `BoardPage.jsx` + `RequestDetail.jsx` (triage board and modal), `src/components/` (header, badges, concept-mock viewer), `src/theme/GlobalStyles.js` (Backyard tokens and fonts) |
+| `shared/` | `rules.js`: validation, scoring and workflow as an ES module, imported by the React app and `require`d by the server |
+| `scripts/dev.js` | Starts the API and the Vite dev server together |
+| `server/` | Node HTTP server: `app.js` (API + static files), `store.js` (atomic JSON persistence), `assistant.js` (Claude intake assistant), `mockgen.js` (Claude concept-mock generation queue), `seed.js` |
+| `tests/` | `node:test` suites for rules, API, intake assistant and concept mocks |
 | `test-data/` | Deterministic generator plus `seed.json`, `requests.csv`, `valid-payload.json`, `edge-cases.json`, `invalid-payloads.json` |
 | `docs/confluence/` | Confluence-ready pages: home, PRD, architecture, API, data model, process, test strategy, runbook, ADRs |
-| `docs/jira/` | `jira-import.csv` (6 epics, 34 stories for the Jira CSV importer) and `backlog.md`, both generated by `backlog.js` |
-| `docs/architecture/` | Mermaid sources (`.mmd`) and rendered `.svg` for 9 diagrams |
+| `docs/jira/` | `jira-import.csv` (7 epics, 40 stories for the Jira CSV importer) and `backlog.md`, both generated by `backlog.js` |
+| `docs/architecture/` | Mermaid sources (`.mmd`) and rendered `.svg` for 10 diagrams |
 | `docs/api/openapi.yaml` | OpenAPI 3 contract |
 | `docs/mocks/` | `screenshots/` of the real app, `samples/` with a real generated concept mock, and `wireframes.html` with Phase 2 mockups (SSO, My requests, emails, Teams, Jira) |
 
@@ -78,12 +103,17 @@ msedge --headless=new --window-size=1280,900 --virtual-time-budget=4000 --screen
 | Env var | Default |
 |---|---|
 | `PORT` | `3000` |
+| `HOST` | `127.0.0.1`. The MVP has no login, so it only listens locally; set `0.0.0.0` (as in a container) only behind SSO or a VPN |
+| `STATIC_DIR` | `./web/dist` (the built React app) |
 | `DATA_FILE` | `./data/requests.json` (mocks are stored in `mocks/` next to it) |
 | `ANTHROPIC_API_KEY` | unset. When set, concept mocks turn on |
 | `MOCKS` | `auto` (on when a key is set), or `on` / `off` |
 | `MOCK_MODEL` | `claude-opus-5` |
 | `MOCK_EFFORT` | `medium`. Higher means better mocks but a longer wait (`low` … `max`) |
+| `ASSIST` | `auto` (on when a key is set), or `on` / `off`. Off means `/` serves the classic form |
+| `ASSIST_MODEL` | `claude-opus-5` |
+| `ASSIST_EFFORT` | `low`, so chat turns feel quick. Raise it for more thorough questioning |
 
-**Concept mocks and privacy:** each request's title, problem, solution, value, metrics, department and systems are sent to the Anthropic API. The requester's name and email are not sent. Set `MOCKS=off` if that isn't acceptable for your data. Generated HTML is sanitised and shown in a sandboxed iframe, so it can't run scripts or load anything.
+**AI features and privacy:** what the requester types in the intake chat, and each request's title, problem, solution, value, metrics, department and systems (for concept mocks), are sent to the Anthropic API. The requester's name and email are entered outside the chat and are never sent. The chat transcript is saved with the submitted request so triage can see how it took shape. Set `ASSIST=off` and `MOCKS=off` if that isn't acceptable for your data. Generated HTML is sanitised and shown in a sandboxed iframe, so it can't run scripts or load anything.
 
 > The MVP has no in-app authentication (see ADR-004). Run it behind an SSO proxy or VPN until Phase 2.

@@ -12,12 +12,21 @@ const invalidCases = require('../test-data/invalid-payloads.json');
 
 const FIXED_NOW = new Date('2026-09-23T15:00:00Z');
 
-async function startServer(initial = []) {
+// A stand-in for the Vite build so server tests never depend on the front end being built.
+function makeStaticDir(dir) {
+  const web = path.join(dir, 'web');
+  fs.mkdirSync(path.join(web, 'assets'), { recursive: true });
+  fs.writeFileSync(path.join(web, 'index.html'), '<!doctype html><title>Feature Intake</title><div id="root"></div><script type="module" src="/assets/app.js"></script>');
+  fs.writeFileSync(path.join(web, 'assets', 'app.js'), 'console.log("app")');
+  return web;
+}
+
+async function startServer(initial = [], { staticDir } = {}) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'intake-'));
   const file = path.join(dir, 'requests.json');
   const store = new Store(file).load();
   if (initial.length) await store.replaceAll(structuredClone(initial));
-  const server = createApp({ store, now: () => FIXED_NOW });
+  const server = createApp({ store, now: () => FIXED_NOW, staticDir: staticDir || makeStaticDir(dir) });
   await new Promise((r) => server.listen(0, r));
   const base = `http://127.0.0.1:${server.address().port}`;
   const call = async (method, p, body, headers = {}) => {
@@ -81,6 +90,29 @@ test('transport errors: malformed JSON, wrong content type, oversize body, unkno
   assert.equal((await s.call('GET', '/api/nope')).status, 404);
   assert.equal((await s.call('GET', '/api/requests/FR-0000-9999')).status, 404);
   assert.equal((await s.call('DELETE', '/api/requests')).status, 405);
+});
+
+test('security: cross-site content types are refused and malformed paths are 400s', async (t) => {
+  const s = await startServer();
+  t.after(s.close);
+  // Browsers send these cross-site without a CORS preflight; they must not count as JSON.
+  for (const type of ['text/plain; a=application/json', 'text/plain;application/json', 'multipart/form-data; application/json']) {
+    assert.equal((await s.call('POST', '/api/requests', valid, { 'Content-Type': type })).status, 415, type);
+  }
+  assert.equal((await s.call('POST', '/api/requests', valid, { 'Content-Type': 'Application/JSON; charset=utf-8' })).status, 201);
+  assert.equal((await s.call('GET', '/api/requests/%E0%A4%A')).status, 400);
+  assert.equal((await s.call('GET', '/%E0%A4%A')).status, 400);
+});
+
+test('rate limiter: fixed window per bucket and client', () => {
+  const { createRateLimiter } = require('../server/app');
+  const check = createRateLimiter({ assist: { max: 2, windowMs: 1000 } });
+  check('assist', 'a', 0);
+  check('assist', 'a', 10);
+  assert.throws(() => check('assist', 'a', 20), (e) => e.status === 429 && e.headers['Retry-After'] === '1');
+  check('assist', 'b', 20); // other clients have their own budget
+  check('assist', 'a', 1000); // new window
+  check('other', 'a', 0); // buckets without a limit are not limited
 });
 
 test('workflow: valid transitions, note requirements, illegal moves', async (t) => {
@@ -165,14 +197,35 @@ test('CSV export escapes quotes and neutralises formulas', async (t) => {
   assert.match(r.text, /"'=HYPERLINK\(""http:\/\/evil.example"",""x""\)"/);
 });
 
-test('static files, security headers and path traversal', async (t) => {
+test('serves the React app: SPA routes, hashed assets, security headers, traversal', async (t) => {
   const s = await startServer();
   t.after(s.close);
+  for (const route of ['/', '/requests', '/anything/deep']) {
+    const page = await s.call('GET', route);
+    assert.equal(page.status, 200, route);
+    assert.match(page.text, /<div id="root">/, route);
+    assert.equal(page.headers.get('cache-control'), 'no-cache', route);
+  }
   const home = await s.call('GET', '/');
-  assert.equal(home.status, 200);
-  assert.match(home.text, /Submit a feature request/);
-  assert.match(home.headers.get('content-security-policy'), /default-src 'self'/);
-  assert.equal((await s.call('GET', '/requests')).status, 200);
+  const csp = home.headers.get('content-security-policy');
+  assert.match(csp, /default-src 'self'/);
+  assert.match(csp, /script-src 'self';/, 'scripts stay same-origin only');
+  assert.match(csp, /style-src 'self' 'unsafe-inline'/, 'styled-components needs inline styles');
+
+  const asset = await s.call('GET', '/assets/app.js');
+  assert.equal(asset.status, 200);
+  assert.match(asset.headers.get('content-type'), /javascript/);
+  assert.match(asset.headers.get('cache-control'), /immutable/);
+
   assert.notEqual((await s.call('GET', '/..%2f..%2fpackage.json')).status, 200);
-  assert.equal((await s.call('GET', '/missing.html')).status, 404);
+  assert.equal((await s.call('GET', '/missing.js')).status, 404, 'missing files are 404, not the SPA shell');
+});
+
+test('explains when the web app has not been built', async (t) => {
+  const s = await startServer([], { staticDir: path.join(os.tmpdir(), 'intake-no-build-' + process.pid) });
+  t.after(s.close);
+  const page = await s.call('GET', '/');
+  assert.equal(page.status, 503);
+  assert.match(page.text, /npm run build/);
+  assert.equal((await s.call('GET', '/api/health')).status, 200, 'API still works');
 });

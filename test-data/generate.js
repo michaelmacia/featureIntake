@@ -10,7 +10,7 @@
  */
 const fs = require('node:fs');
 const path = require('node:path');
-const Rules = require('../public/js/rules.js');
+const Rules = require('../shared/rules.js');
 const { toCsv } = require('../server/app.js');
 
 const OUT = __dirname;
